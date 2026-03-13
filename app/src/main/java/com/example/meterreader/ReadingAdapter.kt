@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 class ReadingAdapter(
     private val readings: List<Reading>,
     private val initialReading: Float,
-    private val onItemClick: (Reading) -> Unit
+    private val onItemClick: (Reading) -> Unit,
+    private val onItemLongClick: (Reading) -> Unit
 ) : RecyclerView.Adapter<ReadingAdapter.ReadingViewHolder>() {
     
     class ReadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,6 +41,11 @@ class ReadingAdapter(
         
         holder.itemView.setOnClickListener {
             onItemClick(reading)
+        }
+        
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(reading)
+            true
         }
     }
     
