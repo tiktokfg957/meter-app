@@ -12,7 +12,18 @@
         android:text="Мои счётчики"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="8dp" />
+
+    <!-- Блок статистики -->
+    <TextView
+        android:id="@+id/tvStats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="16dp"
+        android:textSize="16sp"
+        android:text="💰 Общая сумма: 0.00 руб." />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
