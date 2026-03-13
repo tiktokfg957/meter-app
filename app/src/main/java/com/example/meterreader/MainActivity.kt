@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var btnExport: Button
     private lateinit var btnSettings: Button
+    private lateinit var tvStats: TextView  // для статистики
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var prefs: SharedPreferences
     
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         fabAdd = findViewById(R.id.fabAdd)
         btnExport = findViewById(R.id.btnExport)
         btnSettings = findViewById(R.id.btnSettings)
+        tvStats = findViewById(R.id.tvStats)  // нужно добавить в layout
         
         recyclerView.layoutManager = LinearLayoutManager(this)
         
@@ -73,12 +76,50 @@ class MainActivity : AppCompatActivity() {
     
     private fun loadMeters() {
         val meters = dbHelper.getAllMeters()
-        val adapter = MeterAdapter(meters) { meter ->
-            val intent = Intent(this, AddReadingActivity::class.java)
-            intent.putExtra("meter_id", meter.id)
-            startActivity(intent)
-        }
+        val adapter = MeterAdapter(
+            meters = meters,
+            onItemClick = { meter ->
+                val intent = Intent(this, AddReadingActivity::class.java)
+                intent.putExtra("meter_id", meter.id)
+                startActivity(intent)
+            },
+            onItemLongClick = { meter ->   // долгое нажатие для редактирования счётчика
+                val intent = Intent(this, AddMeterActivity::class.java)
+                intent.putExtra("meter_id", meter.id)
+                startActivity(intent)
+            }
+        )
         recyclerView.adapter = adapter
+        
+        updateStats(meters)
+    }
+    
+    private fun updateStats(meters: List<Meter>) {
+        val readings = dbHelper.getAllReadings()
+        var totalCost = 0f
+        val consumptionByType = mutableMapOf<String, Float>()
+        
+        for (meter in meters) {
+            val meterReadings = readings.filter { it.meterId == meter.id }
+            if (meterReadings.isNotEmpty()) {
+                val lastReading = meterReadings.last().value
+                val firstReading = if (meterReadings.size > 1) meterReadings[meterReadings.size - 2].value else meter.initialReading
+                val consumption = lastReading - firstReading
+                val cost = consumption * meter.tariff
+                totalCost += cost
+                
+                val type = meter.type
+                consumptionByType[type] = consumptionByType.getOrDefault(type, 0f) + consumption
+            }
+        }
+        
+        val statsText = buildString {
+            append("💰 Общая сумма: %.2f руб.\n".format(totalCost))
+            consumptionByType.forEach { (type, cons) ->
+                append("📊 $type: %.1f ед.\n".format(cons))
+            }
+        }
+        tvStats.text = statsText
     }
     
     private fun showExportDialog() {
@@ -105,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             FileWriter(file).use { writer ->
                 CSVWriter(writer).use { csvWriter ->
                     csvWriter.writeNext(arrayOf(
-                        "ID счётчика", "Название", "Тип", "Дата", "Показания", "Разница"
+                        "ID счётчика", "Название", "Тип", "Дата", "Показания", "Разница", "Стоимость"
                     ))
                     
                     for (meter in meters) {
@@ -117,6 +158,7 @@ class MainActivity : AppCompatActivity() {
                             } else {
                                 reading.value - meter.initialReading
                             }
+                            val cost = diff * meter.tariff
                             
                             csvWriter.writeNext(arrayOf(
                                 meter.id.toString(),
@@ -124,7 +166,8 @@ class MainActivity : AppCompatActivity() {
                                 meter.type,
                                 reading.date,
                                 reading.value.toString(),
-                                diff.toString()
+                                diff.toString(),
+                                "%.2f".format(cost)
                             ))
                         }
                     }
@@ -152,6 +195,7 @@ class MainActivity : AppCompatActivity() {
             headerRow.createCell(3).setCellValue("Дата")
             headerRow.createCell(4).setCellValue("Показания")
             headerRow.createCell(5).setCellValue("Разница")
+            headerRow.createCell(6).setCellValue("Стоимость")
             
             var rowNum = 1
             for (meter in meters) {
@@ -163,6 +207,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         reading.value - meter.initialReading
                     }
+                    val cost = diff * meter.tariff
                     
                     val row = sheet.createRow(rowNum++)
                     row.createCell(0).setCellValue(meter.id.toDouble())
@@ -171,6 +216,7 @@ class MainActivity : AppCompatActivity() {
                     row.createCell(3).setCellValue(reading.date)
                     row.createCell(4).setCellValue(reading.value.toDouble())
                     row.createCell(5).setCellValue(diff.toDouble())
+                    row.createCell(6).setCellValue(cost.toDouble())
                 }
             }
             
