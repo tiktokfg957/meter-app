@@ -2,7 +2,6 @@ package com.example.meterreader
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -11,7 +10,7 @@ data class Meter(
     var name: String = "",
     var type: String = "",
     var initialReading: Float = 0f,
-    var tariff: Float = 0f           // <-- добавлен тариф
+    var tariff: Float = 0f
 )
 
 data class Reading(
@@ -21,7 +20,7 @@ data class Reading(
     var date: String = ""
 )
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 2) { // версия 2
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 2) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("""
@@ -30,7 +29,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 name TEXT NOT NULL,
                 type TEXT NOT NULL,
                 initial_reading REAL DEFAULT 0,
-                tariff REAL DEFAULT 0      -- <-- новое поле
+                tariff REAL DEFAULT 0
             )
         """)
         
@@ -51,7 +50,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         }
     }
     
-    // Методы для метров
     fun insertMeter(meter: Meter): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -113,7 +111,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("meters", "id = ?", arrayOf(id.toString()))
     }
     
-    // Методы для показаний
     fun insertReading(reading: Reading): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
