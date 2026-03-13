@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MeterAdapter(
     private val meters: List<Meter>,
-    private val onItemClick: (Meter) -> Unit
+    private val onItemClick: (Meter) -> Unit,
+    private val onItemLongClick: (Meter) -> Unit
 ) : RecyclerView.Adapter<MeterAdapter.MeterViewHolder>() {
     
     class MeterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,6 +38,11 @@ class MeterAdapter(
             onItemClick(meter)
         }
         
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(meter)
+            true
+        }
+        
         holder.btnChart.setOnClickListener {
             val context = holder.itemView.context
             val intent = android.content.Intent(context, ChartActivity::class.java)
@@ -45,12 +51,10 @@ class MeterAdapter(
             context.startActivity(intent)
         }
         
-        // Исправленный обработчик удаления – перезапускает MainActivity
         holder.btnDelete.setOnClickListener {
             val context = holder.itemView.context
             val dbHelper = DatabaseHelper(context)
             dbHelper.deleteMeter(meter.id)
-            // Перезапускаем MainActivity, чтобы обновить список
             val intent = android.content.Intent(context, MainActivity::class.java)
             intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
