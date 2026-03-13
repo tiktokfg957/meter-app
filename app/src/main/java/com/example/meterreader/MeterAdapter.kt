@@ -45,10 +45,15 @@ class MeterAdapter(
             context.startActivity(intent)
         }
         
+        // Исправленный обработчик удаления – перезапускает MainActivity
         holder.btnDelete.setOnClickListener {
-            val dbHelper = DatabaseHelper(holder.itemView.context)
+            val context = holder.itemView.context
+            val dbHelper = DatabaseHelper(context)
             dbHelper.deleteMeter(meter.id)
-            (holder.itemView.context as? MainActivity)?.onResume()
+            // Перезапускаем MainActivity, чтобы обновить список
+            val intent = android.content.Intent(context, MainActivity::class.java)
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
         }
     }
     
