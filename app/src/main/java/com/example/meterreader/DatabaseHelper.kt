@@ -10,7 +10,8 @@ data class Meter(
     var id: Long = 0,
     var name: String = "",
     var type: String = "",
-    var initialReading: Float = 0f
+    var initialReading: Float = 0f,
+    var tariff: Float = 0f           // <-- добавлен тариф
 )
 
 data class Reading(
@@ -20,15 +21,16 @@ data class Reading(
     var date: String = ""
 )
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 1) {
-    
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 2) { // версия 2
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE meters (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 type TEXT NOT NULL,
-                initial_reading REAL DEFAULT 0
+                initial_reading REAL DEFAULT 0,
+                tariff REAL DEFAULT 0      -- <-- новое поле
             )
         """)
         
@@ -44,19 +46,32 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
     }
     
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS readings")
-        db.execSQL("DROP TABLE IF EXISTS meters")
-        onCreate(db)
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE meters ADD COLUMN tariff REAL DEFAULT 0")
+        }
     }
     
+    // Методы для метров
     fun insertMeter(meter: Meter): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("name", meter.name)
             put("type", meter.type)
             put("initial_reading", meter.initialReading)
+            put("tariff", meter.tariff)
         }
         return db.insert("meters", null, values)
+    }
+    
+    fun updateMeter(meter: Meter) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("name", meter.name)
+            put("type", meter.type)
+            put("initial_reading", meter.initialReading)
+            put("tariff", meter.tariff)
+        }
+        db.update("meters", values, "id = ?", arrayOf(meter.id.toString()))
     }
     
     fun getAllMeters(): List<Meter> {
@@ -69,7 +84,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
                 name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
-                initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading"))
+                initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading")),
+                tariff = cursor.getFloat(cursor.getColumnIndexOrThrow("tariff"))
             ))
         }
         cursor.close()
@@ -84,7 +100,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
                 name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
-                initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading"))
+                initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading")),
+                tariff = cursor.getFloat(cursor.getColumnIndexOrThrow("tariff"))
             )
         } else {
             null
@@ -96,6 +113,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("meters", "id = ?", arrayOf(id.toString()))
     }
     
+    // Методы для показаний
     fun insertReading(reading: Reading): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -104,6 +122,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
             put("date", reading.date)
         }
         return db.insert("readings", null, values)
+    }
+    
+    fun updateReading(reading: Reading) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("meter_id", reading.meterId)
+            put("value", reading.value)
+            put("date", reading.date)
+        }
+        db.update("readings", values, "id = ?", arrayOf(reading.id.toString()))
     }
     
     fun getReadingsForMeter(meterId: Long): List<Reading> {
