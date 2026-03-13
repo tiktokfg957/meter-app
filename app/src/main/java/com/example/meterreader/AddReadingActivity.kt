@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ class AddReadingActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private var meterId: Long = 0
     private lateinit var meter: Meter
+    private var editingReading: Reading? = null // для редактирования
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,24 +63,51 @@ class AddReadingActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = dateFormat.format(Date())
         
-        val reading = Reading(
-            meterId = meterId,
-            value = value,
-            date = currentDate
-        )
+        if (editingReading == null) {
+            // Добавление нового
+            val reading = Reading(
+                meterId = meterId,
+                value = value,
+                date = currentDate
+            )
+            dbHelper.insertReading(reading)
+            Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
+        } else {
+            // Обновление существующего
+            editingReading?.value = value
+            editingReading?.date = currentDate
+            dbHelper.updateReading(editingReading!!)
+            Toast.makeText(this, "Показания обновлены", Toast.LENGTH_SHORT).show()
+            editingReading = null
+            btnSave.text = "Сохранить показания"
+        }
         
-        dbHelper.insertReading(reading)
-        Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
         etValue.text.clear()
         loadReadings()
     }
     
     private fun loadReadings() {
         val readings = dbHelper.getReadingsForMeter(meterId)
-        val adapter = ReadingAdapter(readings, meter.initialReading) { reading ->
-            dbHelper.deleteReading(reading.id)
-            loadReadings()
-        }
+        val adapter = ReadingAdapter(
+            readings = readings,
+            initialReading = meter.initialReading,
+            onItemClick = { reading -> // обработка клика для редактирования
+                editingReading = reading
+                etValue.setText(reading.value.toString())
+                btnSave.text = "Обновить"
+            },
+            onItemLongClick = { reading -> // долгое нажатие для удаления
+                AlertDialog.Builder(this)
+                    .setTitle("Удалить запись")
+                    .setMessage("Удалить показания от ${reading.date}?")
+                    .setPositiveButton("Да") { _, _ ->
+                        dbHelper.deleteReading(reading.id)
+                        loadReadings()
+                    }
+                    .setNegativeButton("Нет", null)
+                    .show()
+            }
+        )
         recyclerView.adapter = adapter
     }
 }
