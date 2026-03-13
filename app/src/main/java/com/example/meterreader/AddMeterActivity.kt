@@ -11,9 +11,12 @@ class AddMeterActivity : AppCompatActivity() {
     private lateinit var etName: EditText
     private lateinit var etType: EditText
     private lateinit var etInitial: EditText
+    private lateinit var etTariff: EditText  // новое поле
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var dbHelper: DatabaseHelper
+    
+    private var meterId: Long = 0 // если 0 - добавление, иначе редактирование
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +27,15 @@ class AddMeterActivity : AppCompatActivity() {
         etName = findViewById(R.id.etMeterName)
         etType = findViewById(R.id.etMeterType)
         etInitial = findViewById(R.id.etInitialReading)
+        etTariff = findViewById(R.id.etTariff) // нужно добавить в layout
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
+        
+        // Проверяем, передан ли ID для редактирования
+        meterId = intent.getLongExtra("meter_id", 0)
+        if (meterId != 0L) {
+            loadMeterData()
+        }
         
         btnSave.setOnClickListener {
             saveMeter()
@@ -36,26 +46,45 @@ class AddMeterActivity : AppCompatActivity() {
         }
     }
     
+    private fun loadMeterData() {
+        val meter = dbHelper.getMeter(meterId)
+        if (meter != null) {
+            etName.setText(meter.name)
+            etType.setText(meter.type)
+            etInitial.setText(meter.initialReading.toString())
+            etTariff.setText(meter.tariff.toString())
+        }
+    }
+    
     private fun saveMeter() {
         val name = etName.text.toString().trim()
         val type = etType.text.toString().trim()
         val initialStr = etInitial.text.toString().trim()
+        val tariffStr = etTariff.text.toString().trim()
         
-        if (name.isEmpty() || type.isEmpty() || initialStr.isEmpty()) {
+        if (name.isEmpty() || type.isEmpty() || initialStr.isEmpty() || tariffStr.isEmpty()) {
             Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
             return
         }
         
         val initial = initialStr.toFloatOrNull() ?: 0f
+        val tariff = tariffStr.toFloatOrNull() ?: 0f
         
         val meter = Meter(
+            id = meterId,
             name = name,
             type = type,
-            initialReading = initial
+            initialReading = initial,
+            tariff = tariff
         )
         
-        dbHelper.insertMeter(meter)
-        Toast.makeText(this, "Счётчик добавлен", Toast.LENGTH_SHORT).show()
+        if (meterId == 0L) {
+            dbHelper.insertMeter(meter)
+            Toast.makeText(this, "Счётчик добавлен", Toast.LENGTH_SHORT).show()
+        } else {
+            dbHelper.updateMeter(meter)
+            Toast.makeText(this, "Счётчик обновлён", Toast.LENGTH_SHORT).show()
+        }
         finish()
     }
 }
