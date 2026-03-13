@@ -22,7 +22,7 @@ class AddReadingActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private var meterId: Long = 0
     private lateinit var meter: Meter
-    private var editingReading: Reading? = null // для редактирования
+    private var editingReading: Reading? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,6 @@ class AddReadingActivity : AppCompatActivity() {
         val currentDate = dateFormat.format(Date())
         
         if (editingReading == null) {
-            // Добавление нового
             val reading = Reading(
                 meterId = meterId,
                 value = value,
@@ -73,7 +72,6 @@ class AddReadingActivity : AppCompatActivity() {
             dbHelper.insertReading(reading)
             Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
         } else {
-            // Обновление существующего
             editingReading?.value = value
             editingReading?.date = currentDate
             dbHelper.updateReading(editingReading!!)
@@ -88,16 +86,15 @@ class AddReadingActivity : AppCompatActivity() {
     
     private fun loadReadings() {
         val readings = dbHelper.getReadingsForMeter(meterId)
-        // Исправлено: импорт ReadingAdapter уже есть, типы лямбд указаны явно
         val adapter = ReadingAdapter(
             readings = readings,
             initialReading = meter.initialReading,
-            onItemClick = { reading: Reading ->  // явно указан тип
+            onItemClick = { reading: Reading ->
                 editingReading = reading
                 etValue.setText(reading.value.toString())
                 btnSave.text = "Обновить"
             },
-            onItemLongClick = { reading: Reading ->  // явно указан тип
+            onItemLongClick = { reading: Reading ->
                 AlertDialog.Builder(this)
                     .setTitle("Удалить запись")
                     .setMessage("Удалить показания от ${reading.date}?")
