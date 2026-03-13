@@ -11,12 +11,12 @@ class AddMeterActivity : AppCompatActivity() {
     private lateinit var etName: EditText
     private lateinit var etType: EditText
     private lateinit var etInitial: EditText
-    private lateinit var etTariff: EditText  // новое поле
+    private lateinit var etTariff: EditText
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var dbHelper: DatabaseHelper
     
-    private var meterId: Long = 0 // если 0 - добавление, иначе редактирование
+    private var meterId: Long = 0
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +27,10 @@ class AddMeterActivity : AppCompatActivity() {
         etName = findViewById(R.id.etMeterName)
         etType = findViewById(R.id.etMeterType)
         etInitial = findViewById(R.id.etInitialReading)
-        etTariff = findViewById(R.id.etTariff) // нужно добавить в layout
+        etTariff = findViewById(R.id.etTariff)
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
         
-        // Проверяем, передан ли ID для редактирования
         meterId = intent.getLongExtra("meter_id", 0)
         if (meterId != 0L) {
             loadMeterData()
