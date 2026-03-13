@@ -76,15 +76,14 @@ class MainActivity : AppCompatActivity() {
     
     private fun loadMeters() {
         val meters = dbHelper.getAllMeters()
-        // Исправлено: передаём три параметра в конструктор MeterAdapter
         val adapter = MeterAdapter(
             meters = meters,
-            onItemClick = { meter: Meter ->   // явный тип
+            onItemClick = { meter: Meter ->
                 val intent = Intent(this, AddReadingActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
             },
-            onItemLongClick = { meter: Meter ->  // явный тип
+            onItemLongClick = { meter: Meter ->
                 val intent = Intent(this, AddMeterActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
