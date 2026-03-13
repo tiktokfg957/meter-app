@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Учёт ЖКХ</string>
+    <string name="add_meter">Добавить счётчик</string>
+    <string name="add_reading">Добавить показания</string>
+    <string name="view_chart">График</string>
+    <string name="export_data">Экспорт данных</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="system_theme">Как в системе</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="meter_name">Название счётчика</string>
+    <string name="meter_type">Тип (Вода/Свет/Газ)</string>
+    <string name="initial_reading">Начальные показания</string>
+    <string name="reading_value">Показания</string>
+    <string name="reading_date">Дата</string>
+    <string name="difference">Разница</string>
+    <string name="csv_exported">CSV экспортирован</string>
+    <string name="excel_exported">Excel экспортирован</string>
+    <string name="export_error">Ошибка экспорта</string>
+</resources>
