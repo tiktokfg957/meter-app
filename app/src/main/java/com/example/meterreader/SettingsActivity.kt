@@ -1,7 +1,5 @@
 package com.example.meterreader
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,7 +10,6 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
-import java.util.concurrent.TimeUnit
 
 class SettingsActivity : AppCompatActivity() {
     
@@ -64,8 +61,8 @@ class SettingsActivity : AppCompatActivity() {
     }
     
     private fun scheduleReminder(day: Int) {
-        val workRequest = PeriodicWorkRequestBuilder<ReminderWorker>(30, TimeUnit.DAYS)
-            .setInitialDelay(1, TimeUnit.DAYS) // для теста можно поставить меньше
+        val workRequest = PeriodicWorkRequestBuilder<ReminderWorker>(30, java.util.concurrent.TimeUnit.DAYS)
+            .setInitialDelay(1, java.util.concurrent.TimeUnit.DAYS)
             .setConstraints(Constraints.Builder()
                 .setRequiresBatteryNotLow(true)
                 .build())
