@@ -1,9 +1,7 @@
-name: Build Signed APK (first time)
+name: Generate Keystore and Build Signed APK
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -18,11 +16,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.0'
 
       - name: Generate keystore
         run: |
