@@ -88,15 +88,16 @@ class AddReadingActivity : AppCompatActivity() {
     
     private fun loadReadings() {
         val readings = dbHelper.getReadingsForMeter(meterId)
+        // Исправлено: импорт ReadingAdapter уже есть, типы лямбд указаны явно
         val adapter = ReadingAdapter(
             readings = readings,
             initialReading = meter.initialReading,
-            onItemClick = { reading -> // обработка клика для редактирования
+            onItemClick = { reading: Reading ->  // явно указан тип
                 editingReading = reading
                 etValue.setText(reading.value.toString())
                 btnSave.text = "Обновить"
             },
-            onItemLongClick = { reading -> // долгое нажатие для удаления
+            onItemLongClick = { reading: Reading ->  // явно указан тип
                 AlertDialog.Builder(this)
                     .setTitle("Удалить запись")
                     .setMessage("Удалить показания от ${reading.date}?")
