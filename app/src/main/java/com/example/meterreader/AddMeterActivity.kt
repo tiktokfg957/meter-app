@@ -3,109 +3,87 @@ package com.example.meterreader
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class AddReadingActivity : AppCompatActivity() {
+class AddMeterActivity : AppCompatActivity() {
     
-    private lateinit var tvMeterInfo: TextView
-    private lateinit var etValue: EditText
+    private lateinit var etName: EditText
+    private lateinit var etType: EditText
+    private lateinit var etInitial: EditText
+    private lateinit var etTariff: EditText
     private lateinit var btnSave: Button
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var btnCancel: Button
     private lateinit var dbHelper: DatabaseHelper
+    
     private var meterId: Long = 0
-    private lateinit var meter: Meter
-    private var editingReading: Reading? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_reading)
+        setContentView(R.layout.activity_add_meter)
         
         dbHelper = DatabaseHelper(this)
+        
+        etName = findViewById(R.id.etMeterName)
+        etType = findViewById(R.id.etMeterType)
+        etInitial = findViewById(R.id.etInitialReading)
+        etTariff = findViewById(R.id.etTariff)
+        btnSave = findViewById(R.id.btnSave)
+        btnCancel = findViewById(R.id.btnCancel)
+        
         meterId = intent.getLongExtra("meter_id", 0)
-        meter = dbHelper.getMeter(meterId) ?: run {
-            Toast.makeText(this, "Счётчик не найден", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+        if (meterId != 0L) {
+            loadMeterData()
         }
-        
-        tvMeterInfo = findViewById(R.id.tvMeterInfo)
-        etValue = findViewById(R.id.etReadingValue)
-        btnSave = findViewById(R.id.btnSaveReading)
-        recyclerView = findViewById(R.id.recyclerViewReadings)
-        
-        tvMeterInfo.text = "${meter.name} (${meter.type})"
-        
-        recyclerView.layoutManager = LinearLayoutManager(this)
         
         btnSave.setOnClickListener {
-            saveReading()
+            saveMeter()
         }
         
-        loadReadings()
+        btnCancel.setOnClickListener {
+            finish()
+        }
     }
     
-    private fun saveReading() {
-        val valueStr = etValue.text.toString().trim()
-        if (valueStr.isEmpty()) {
-            Toast.makeText(this, "Введите показания", Toast.LENGTH_SHORT).show()
+    private fun loadMeterData() {
+        val meter = dbHelper.getMeter(meterId)
+        if (meter != null) {
+            etName.setText(meter.name)
+            etType.setText(meter.type)
+            etInitial.setText(meter.initialReading.toString())
+            etTariff.setText(meter.tariff.toString())
+        }
+    }
+    
+    private fun saveMeter() {
+        val name = etName.text.toString().trim()
+        val type = etType.text.toString().trim()
+        val initialStr = etInitial.text.toString().trim()
+        val tariffStr = etTariff.text.toString().trim()
+        
+        if (name.isEmpty() || type.isEmpty() || initialStr.isEmpty() || tariffStr.isEmpty()) {
+            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
             return
         }
         
-        val value = valueStr.toFloatOrNull() ?: 0f
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val currentDate = dateFormat.format(Date())
+        val initial = initialStr.toFloatOrNull() ?: 0f
+        val tariff = tariffStr.toFloatOrNull() ?: 0f
         
-        if (editingReading == null) {
-            val reading = Reading(
-                meterId = meterId,
-                value = value,
-                date = currentDate
-            )
-            dbHelper.insertReading(reading)
-            Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
-        } else {
-            editingReading?.value = value
-            editingReading?.date = currentDate
-            dbHelper.updateReading(editingReading!!)
-            Toast.makeText(this, "Показания обновлены", Toast.LENGTH_SHORT).show()
-            editingReading = null
-            btnSave.text = "Сохранить показания"
-        }
-        
-        etValue.text.clear()
-        loadReadings()
-    }
-    
-    private fun loadReadings() {
-        val readings = dbHelper.getReadingsForMeter(meterId)
-        val adapter = ReadingAdapter(
-            readings = readings,
-            initialReading = meter.initialReading,
-            onItemClick = { reading: Reading ->
-                editingReading = reading
-                etValue.setText(reading.value.toString())
-                btnSave.text = "Обновить"
-            },
-            onItemLongClick = { reading: Reading ->
-                AlertDialog.Builder(this)
-                    .setTitle("Удалить запись")
-                    .setMessage("Удалить показания от ${reading.date}?")
-                    .setPositiveButton("Да") { _, _ ->
-                        dbHelper.deleteReading(reading.id)
-                        loadReadings()
-                    }
-                    .setNegativeButton("Нет", null)
-                    .show()
-            }
+        val meter = Meter(
+            id = meterId,
+            name = name,
+            type = type,
+            initialReading = initial,
+            tariff = tariff
         )
-        recyclerView.adapter = adapter
+        
+        if (meterId == 0L) {
+            dbHelper.insertMeter(meter)
+            Toast.makeText(this, "Счётчик добавлен", Toast.LENGTH_SHORT).show()
+        } else {
+            dbHelper.updateMeter(meter)
+            Toast.makeText(this, "Счётчик обновлён", Toast.LENGTH_SHORT).show()
+        }
+        finish()
     }
 }
