@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var btnExport: Button
     private lateinit var btnSettings: Button
-    private lateinit var tvStats: TextView  // для статистики
+    private lateinit var tvStats: TextView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var prefs: SharedPreferences
     
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         fabAdd = findViewById(R.id.fabAdd)
         btnExport = findViewById(R.id.btnExport)
         btnSettings = findViewById(R.id.btnSettings)
-        tvStats = findViewById(R.id.tvStats)  // нужно добавить в layout
+        tvStats = findViewById(R.id.tvStats)
         
         recyclerView.layoutManager = LinearLayoutManager(this)
         
@@ -76,14 +76,15 @@ class MainActivity : AppCompatActivity() {
     
     private fun loadMeters() {
         val meters = dbHelper.getAllMeters()
+        // Исправлено: передаём три параметра в конструктор MeterAdapter
         val adapter = MeterAdapter(
             meters = meters,
-            onItemClick = { meter ->
+            onItemClick = { meter: Meter ->   // явный тип
                 val intent = Intent(this, AddReadingActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
             },
-            onItemLongClick = { meter ->   // долгое нажатие для редактирования счётчика
+            onItemLongClick = { meter: Meter ->  // явный тип
                 val intent = Intent(this, AddMeterActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
