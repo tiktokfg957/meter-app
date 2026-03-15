@@ -39,10 +39,12 @@ class ReadingAdapter(
 
         holder.tvDiff.text = "Разница: $diff"
 
+        // Короткое нажатие – редактирование
         holder.itemView.setOnClickListener {
             onItemClick(reading)
         }
 
+        // Долгое нажатие – удаление
         holder.itemView.setOnLongClickListener {
             onItemLongClick(reading)
             true
