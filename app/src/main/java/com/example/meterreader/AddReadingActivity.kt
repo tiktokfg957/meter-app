@@ -70,6 +70,7 @@ class AddReadingActivity : AppCompatActivity() {
         val currentDate = dateFormat.format(Date())
 
         if (editingReading == null) {
+            // Добавление новой записи
             val reading = Reading(
                 meterId = meterId,
                 value = value,
@@ -78,6 +79,7 @@ class AddReadingActivity : AppCompatActivity() {
             dbHelper.insertReading(reading)
             Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
         } else {
+            // Обновление существующей записи
             editingReading?.value = value
             editingReading?.date = currentDate
             dbHelper.updateReading(editingReading!!)
@@ -96,11 +98,13 @@ class AddReadingActivity : AppCompatActivity() {
             readings = readings,
             initialReading = meter.initialReading,
             onItemClick = { reading ->
+                // Редактирование по короткому нажатию
                 editingReading = reading
                 etValue.setText(reading.value.toString())
                 btnSave.text = "Обновить"
             },
             onItemLongClick = { reading ->
+                // Удаление по долгому нажатию
                 AlertDialog.Builder(this)
                     .setTitle("Удалить запись")
                     .setMessage("Удалить показания от ${reading.date}?")
