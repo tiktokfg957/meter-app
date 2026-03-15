@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddMeterActivity"/>
-        <activity android:name=".AddingActivity"/>
+        <activity android:name=".AddReadingActivity"/>
         <activity android:name=".ChartActivity"/>
         <activity android:name=".SettingsActivity"/>
     </application>
