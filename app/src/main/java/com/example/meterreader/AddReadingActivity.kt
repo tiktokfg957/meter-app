@@ -1,6 +1,7 @@
 package com.example.meterreader
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -65,7 +66,12 @@ class AddReadingActivity : AppCompatActivity() {
             return
         }
 
-        val value = valueStr.toFloatOrNull() ?: 0f
+        val value = valueStr.toFloatOrNull()
+        if (value == null) {
+            Toast.makeText(this, "Некорректное число", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = dateFormat.format(Date())
 
@@ -98,22 +104,32 @@ class AddReadingActivity : AppCompatActivity() {
             readings = readings,
             initialReading = meter.initialReading,
             onItemClick = { reading ->
-                // Редактирование по короткому нажатию
-                editingReading = reading
-                etValue.setText(reading.value.toString())
-                btnSave.text = "Обновить"
+                try {
+                    // Редактирование по короткому нажатию
+                    editingReading = reading
+                    etValue.setText(reading.value.toString())
+                    btnSave.text = "Обновить"
+                } catch (e: Exception) {
+                    Log.e("AddReadingActivity", "Ошибка при клике", e)
+                    Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             },
             onItemLongClick = { reading ->
-                // Удаление по долгому нажатию
-                AlertDialog.Builder(this)
-                    .setTitle("Удалить запись")
-                    .setMessage("Удалить показания от ${reading.date}?")
-                    .setPositiveButton("Да") { _, _ ->
-                        dbHelper.deleteReading(reading.id)
-                        loadReadings()
-                    }
-                    .setNegativeButton("Нет", null)
-                    .show()
+                try {
+                    // Удаление по долгому нажатию
+                    AlertDialog.Builder(this)
+                        .setTitle("Удалить запись")
+                        .setMessage("Удалить показания от ${reading.date}?")
+                        .setPositiveButton("Да") { _, _ ->
+                            dbHelper.deleteReading(reading.id)
+                            loadReadings()
+                        }
+                        .setNegativeButton("Нет", null)
+                        .show()
+                } catch (e: Exception) {
+                    Log.e("AddReadingActivity", "Ошибка при долгом нажатии", e)
+                    Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         )
         recyclerView.adapter = adapter
