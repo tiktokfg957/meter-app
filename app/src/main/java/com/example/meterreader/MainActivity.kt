@@ -18,54 +18,66 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import com.opencsv.CSVWriter
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var btnExport: Button
     private lateinit var btnSettings: Button
+    private lateinit var btnStats: Button   // новая кнопка
+    private lateinit var btnGoals: Button   // новая кнопка
     private lateinit var tvStats: TextView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var prefs: SharedPreferences
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         val theme = prefs.getString("theme", "system")
         applyTheme(theme)
-        
+
         setContentView(R.layout.activity_main)
-        
+
         dbHelper = DatabaseHelper(this)
-        
+
         recyclerView = findViewById(R.id.recyclerView)
         fabAdd = findViewById(R.id.fabAdd)
         btnExport = findViewById(R.id.btnExport)
         btnSettings = findViewById(R.id.btnSettings)
+        btnStats = findViewById(R.id.btnStats)
+        btnGoals = findViewById(R.id.btnGoals)
         tvStats = findViewById(R.id.tvStats)
-        
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        
+
         fabAdd.setOnClickListener {
             startActivity(Intent(this, AddMeterActivity::class.java))
         }
-        
+
         btnExport.setOnClickListener {
             showExportDialog()
         }
-        
+
         btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-        
+
+        btnStats.setOnClickListener {
+            startActivity(Intent(this, StatisticsActivity::class.java))
+        }
+
+        btnGoals.setOnClickListener {
+            startActivity(Intent(this, GoalsActivity::class.java))
+        }
+
         loadMeters()
     }
-    
+
     override fun onResume() {
         super.onResume()
         loadMeters()
     }
-    
+
     private fun applyTheme(theme: String?) {
         when (theme) {
             "dark" -> setTheme(R.style.AppTheme_Dark)
@@ -73,32 +85,32 @@ class MainActivity : AppCompatActivity() {
             else -> setTheme(R.style.AppTheme)
         }
     }
-    
+
     private fun loadMeters() {
         val meters = dbHelper.getAllMeters()
         val adapter = MeterAdapter(
             meters = meters,
-            onItemClick = { meter: Meter ->
+            onItemClick = { meter ->
                 val intent = Intent(this, AddReadingActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
             },
-            onItemLongClick = { meter: Meter ->
+            onItemLongClick = { meter ->
                 val intent = Intent(this, AddMeterActivity::class.java)
                 intent.putExtra("meter_id", meter.id)
                 startActivity(intent)
             }
         )
         recyclerView.adapter = adapter
-        
+
         updateStats(meters)
     }
-    
+
     private fun updateStats(meters: List<Meter>) {
         val readings = dbHelper.getAllReadings()
         var totalCost = 0f
         val consumptionByType = mutableMapOf<String, Float>()
-        
+
         for (meter in meters) {
             val meterReadings = readings.filter { it.meterId == meter.id }
             if (meterReadings.isNotEmpty()) {
@@ -107,12 +119,12 @@ class MainActivity : AppCompatActivity() {
                 val consumption = lastReading - firstReading
                 val cost = consumption * meter.tariff
                 totalCost += cost
-                
+
                 val type = meter.type
                 consumptionByType[type] = consumptionByType.getOrDefault(type, 0f) + consumption
             }
         }
-        
+
         val statsText = buildString {
             append("💰 Общая сумма: %.2f руб.\n".format(totalCost))
             consumptionByType.forEach { (type, cons) ->
@@ -121,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         }
         tvStats.text = statsText
     }
-    
+
     private fun showExportDialog() {
         val options = arrayOf("CSV", "Excel (XLSX)")
         android.app.AlertDialog.Builder(this)
@@ -134,21 +146,21 @@ class MainActivity : AppCompatActivity() {
             }
             .show()
     }
-    
+
     private fun exportToCSV() {
         try {
             val meters = dbHelper.getAllMeters()
             val readings = dbHelper.getAllReadings()
-            
+
             val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
             val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.csv")
-            
+
             FileWriter(file).use { writer ->
                 CSVWriter(writer).use { csvWriter ->
                     csvWriter.writeNext(arrayOf(
                         "ID счётчика", "Название", "Тип", "Дата", "Показания", "Разница", "Стоимость"
                     ))
-                    
+
                     for (meter in meters) {
                         val meterReadings = readings.filter { it.meterId == meter.id }
                         for (i in meterReadings.indices) {
@@ -159,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                                 reading.value - meter.initialReading
                             }
                             val cost = diff * meter.tariff
-                            
+
                             csvWriter.writeNext(arrayOf(
                                 meter.id.toString(),
                                 meter.name,
@@ -173,21 +185,21 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            
+
             Toast.makeText(this, "CSV сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun exportToExcel() {
         try {
             val meters = dbHelper.getAllMeters()
             val readings = dbHelper.getAllReadings()
-            
+
             val workbook: Workbook = XSSFWorkbook()
             val sheet = workbook.createSheet("Показания")
-            
+
             val headerRow = sheet.createRow(0)
             headerRow.createCell(0).setCellValue("ID счётчика")
             headerRow.createCell(1).setCellValue("Название")
@@ -196,7 +208,7 @@ class MainActivity : AppCompatActivity() {
             headerRow.createCell(4).setCellValue("Показания")
             headerRow.createCell(5).setCellValue("Разница")
             headerRow.createCell(6).setCellValue("Стоимость")
-            
+
             var rowNum = 1
             for (meter in meters) {
                 val meterReadings = readings.filter { it.meterId == meter.id }
@@ -208,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                         reading.value - meter.initialReading
                     }
                     val cost = diff * meter.tariff
-                    
+
                     val row = sheet.createRow(rowNum++)
                     row.createCell(0).setCellValue(meter.id.toDouble())
                     row.createCell(1).setCellValue(meter.name)
@@ -219,15 +231,15 @@ class MainActivity : AppCompatActivity() {
                     row.createCell(6).setCellValue(cost.toDouble())
                 }
             }
-            
+
             val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
             val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.xlsx")
-            
+
             file.outputStream().use { outputStream ->
                 workbook.write(outputStream)
             }
             workbook.close()
-            
+
             Toast.makeText(this, "Excel сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
