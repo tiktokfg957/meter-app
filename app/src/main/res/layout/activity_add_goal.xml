@@ -38,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Целевая сумма экономии (руб)"
-            android:inputType="numberDecimal"
-            android:textColorHint="@android:color/darker_gray"/>
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
