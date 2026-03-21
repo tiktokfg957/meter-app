@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
 import java.io.FileWriter
+import java.text.SimpleDateFormat
+import java.util.*
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import com.opencsv.CSVWriter
@@ -21,11 +23,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabAdd: FloatingActionButton
-    private lateinit var btnExport: Button
+    private lateinit var btnStats: Button
+    private lateinit var btnGoals: Button
+    private lateinit var btnExportCSV: Button
+    private lateinit var btnExportExcel: Button
     private lateinit var btnSettings: Button
-    private lateinit var btnStats: Button   // новая кнопка
-    private lateinit var btnGoals: Button   // новая кнопка
-    private lateinit var tvStats: TextView
+    private lateinit var tvTotalMonth: TextView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var prefs: SharedPreferences
 
@@ -42,24 +45,17 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         fabAdd = findViewById(R.id.fabAdd)
-        btnExport = findViewById(R.id.btnExport)
-        btnSettings = findViewById(R.id.btnSettings)
         btnStats = findViewById(R.id.btnStats)
         btnGoals = findViewById(R.id.btnGoals)
-        tvStats = findViewById(R.id.tvStats)
+        btnExportCSV = findViewById(R.id.btnExportCSV)
+        btnExportExcel = findViewById(R.id.btnExportExcel)
+        btnSettings = findViewById(R.id.btnSettings)
+        tvTotalMonth = findViewById(R.id.tvTotalMonth)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         fabAdd.setOnClickListener {
             startActivity(Intent(this, AddMeterActivity::class.java))
-        }
-
-        btnExport.setOnClickListener {
-            showExportDialog()
-        }
-
-        btnSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         btnStats.setOnClickListener {
@@ -68,6 +64,18 @@ class MainActivity : AppCompatActivity() {
 
         btnGoals.setOnClickListener {
             startActivity(Intent(this, GoalsActivity::class.java))
+        }
+
+        btnExportCSV.setOnClickListener {
+            exportToCSV()
+        }
+
+        btnExportExcel.setOnClickListener {
+            exportToExcel()
+        }
+
+        btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         loadMeters()
@@ -104,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         updateStats(meters)
+        updateTotalForCurrentMonth()
     }
 
     private fun updateStats(meters: List<Meter>) {
@@ -125,28 +134,32 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val statsText = buildString {
-            append("💰 Общая сумма: %.2f руб.\n".format(totalCost))
-            consumptionByType.forEach { (type, cons) ->
-                append("📊 $type: %.1f ед.\n".format(cons))
+        // Можно также обновить TextView, если нужно, но у нас уже есть отдельное поле для итога за месяц
+        // Оставлено для совместимости
+    }
+
+    private fun updateTotalForCurrentMonth() {
+        val meters = dbHelper.getAllMeters()
+        val readings = dbHelper.getAllReadings()
+        val currentMonth = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
+        var totalMonth = 0f
+
+        for (meter in meters) {
+            val monthReadings = readings.filter { it.meterId == meter.id && it.date.startsWith(currentMonth) }
+            if (monthReadings.isNotEmpty()) {
+                // Сортируем по дате, берём последнее показание за месяц и предыдущее (или начальное)
+                val sorted = monthReadings.sortedBy { it.date }
+                val last = sorted.last()
+                val previous = if (sorted.size > 1) sorted[sorted.size - 2].value else meter.initialReading
+                val diff = last.value - previous
+                totalMonth += diff * meter.tariff
             }
         }
-        tvStats.text = statsText
+
+        tvTotalMonth.text = "%.2f ₽".format(totalMonth)
     }
 
-    private fun showExportDialog() {
-        val options = arrayOf("CSV", "Excel (XLSX)")
-        android.app.AlertDialog.Builder(this)
-            .setTitle("Экспорт данных")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> exportToCSV()
-                    1 -> exportToExcel()
-                }
-            }
-            .show()
-    }
-
+    // Экспорт в CSV (без диалога, сразу сохраняет все данные)
     private fun exportToCSV() {
         try {
             val meters = dbHelper.getAllMeters()
@@ -192,6 +205,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Экспорт в Excel (без диалога)
     private fun exportToExcel() {
         try {
             val meters = dbHelper.getAllMeters()
