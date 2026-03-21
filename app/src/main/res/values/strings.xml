@@ -20,6 +20,8 @@
     <string name="csv_exported">CSV экспортирован</string>
     <string name="excel_exported">Excel экспортирован</string>
     <string name="export_error">Ошибка экспорта</string>
+
+    <!-- Новые строки для обновления -->
     <string name="statistics">Статистика</string>
     <string name="goals">Цели</string>
     <string name="add_goal">Добавить цель</string>
