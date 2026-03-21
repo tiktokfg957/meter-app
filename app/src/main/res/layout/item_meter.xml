@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,43 +19,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#1e2f3d" />
 
         <TextView
             android:id="@+id/tvMeterType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#7f8c8d"
             android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/tvInitialReading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#7f8c8d"
             android:layout_marginTop="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:gravity="end">
 
             <Button
                 android:id="@+id/btnChart"
-                android:layout_width="0dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="График"
-                android:layout_marginEnd="4dp" />
+                android:text="📊 График"
+                android:textColor="#1e5f70" />
 
             <Button
                 android:id="@+id/btnDelete"
-                android:layout_width="0dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Удалить"
-                android:layout_marginStart="4dp" />
+                android:text="🗑 Удалить"
+                android:textColor="#d32f2f" />
         </LinearLayout>
 
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>
