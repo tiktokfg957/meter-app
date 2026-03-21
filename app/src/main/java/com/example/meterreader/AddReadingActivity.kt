@@ -1,7 +1,7 @@
 package com.example.meterreader
 
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,8 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class AddReadingActivity : AppCompatActivity() {
 
@@ -66,17 +65,11 @@ class AddReadingActivity : AppCompatActivity() {
             return
         }
 
-        val value = valueStr.toFloatOrNull()
-        if (value == null) {
-            Toast.makeText(this, "Некорректное число", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        val value = valueStr.toFloatOrNull() ?: 0f
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = dateFormat.format(Date())
 
         if (editingReading == null) {
-            // Добавление новой записи
             val reading = Reading(
                 meterId = meterId,
                 value = value,
@@ -85,7 +78,6 @@ class AddReadingActivity : AppCompatActivity() {
             dbHelper.insertReading(reading)
             Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
         } else {
-            // Обновление существующей записи
             editingReading?.value = value
             editingReading?.date = currentDate
             dbHelper.updateReading(editingReading!!)
@@ -104,32 +96,20 @@ class AddReadingActivity : AppCompatActivity() {
             readings = readings,
             initialReading = meter.initialReading,
             onItemClick = { reading ->
-                try {
-                    // Редактирование по короткому нажатию
-                    editingReading = reading
-                    etValue.setText(reading.value.toString())
-                    btnSave.text = "Обновить"
-                } catch (e: Exception) {
-                    Log.e("AddReadingActivity", "Ошибка при клике", e)
-                    Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                editingReading = reading
+                etValue.setText(reading.value.toString())
+                btnSave.text = "Обновить"
             },
             onItemLongClick = { reading ->
-                try {
-                    // Удаление по долгому нажатию
-                    AlertDialog.Builder(this)
-                        .setTitle("Удалить запись")
-                        .setMessage("Удалить показания от ${reading.date}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            dbHelper.deleteReading(reading.id)
-                            loadReadings()
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                } catch (e: Exception) {
-                    Log.e("AddReadingActivity", "Ошибка при долгом нажатии", e)
-                    Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                AlertDialog.Builder(this)
+                    .setTitle("Удалить запись")
+                    .setMessage("Удалить показания от ${reading.date}?")
+                    .setPositiveButton("Да") { _, _ ->
+                        dbHelper.deleteReading(reading.id)
+                        loadReadings()
+                    }
+                    .setNegativeButton("Нет", null)
+                    .show()
             }
         )
         recyclerView.adapter = adapter
