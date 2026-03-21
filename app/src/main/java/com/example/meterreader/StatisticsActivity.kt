@@ -13,7 +13,7 @@ import java.util.*
 class StatisticsActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
-    private lateinit var tvForecast: TextView
+    private lateinit var tvPeak: TextView
     private lateinit var barChart: BarChart
     private lateinit var pieChart: PieChart
 
@@ -23,7 +23,7 @@ class StatisticsActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
-        tvForecast = findViewById(R.id.tvForecast)
+        tvPeak = findViewById(R.id.tvPeak)
         barChart = findViewById(R.id.barChart)
         pieChart = findViewById(R.id.pieChart)
 
@@ -34,11 +34,9 @@ class StatisticsActivity : AppCompatActivity() {
         val meters = dbHelper.getAllMeters()
         val readings = dbHelper.getAllReadings()
 
-        // Подготовим данные по месяцам
+        // Подготовим данные по месяцам (расходы)
         val monthlyExpenses = mutableMapOf<String, Float>()
         val categoryExpenses = mutableMapOf<String, Float>()
-
-        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
         for (meter in meters) {
             val meterReadings = readings.filter { it.meterId == meter.id }.sortedBy { it.date }
@@ -53,7 +51,7 @@ class StatisticsActivity : AppCompatActivity() {
             }
         }
 
-        // График расходов по месяцам (BarChart)
+        // Строим барчарт
         val months = monthlyExpenses.keys.sorted()
         val entries = months.mapIndexed { index, month ->
             BarEntry(index.toFloat(), monthlyExpenses[month] ?: 0f)
@@ -64,6 +62,17 @@ class StatisticsActivity : AppCompatActivity() {
         barChart.data = barData
         barChart.invalidate()
 
+        // Находим пик потребления (максимальное значение)
+        if (entries.isNotEmpty()) {
+            val maxEntry = entries.maxByOrNull { it.y }
+            val maxIndex = maxEntry?.x?.toInt() ?: 0
+            val maxMonth = months[maxIndex]
+            val maxValue = maxEntry?.y ?: 0f
+            tvPeak.text = "Пик потребления: $maxMonth (%.2f ₽)".format(maxValue)
+        } else {
+            tvPeak.text = "Нет данных для определения пика"
+        }
+
         // Круговая диаграмма по категориям
         val pieEntries = categoryExpenses.map { (category, amount) ->
             PieEntry(amount, category)
@@ -73,18 +82,5 @@ class StatisticsActivity : AppCompatActivity() {
         val pieData = PieData(pieDataSet)
         pieChart.data = pieData
         pieChart.invalidate()
-
-        // Прогноз на следующий месяц (простая экстраполяция)
-        if (months.size >= 2) {
-            val lastMonth = months.last()
-            val prevMonth = months[months.size - 2]
-            val lastAmount = monthlyExpenses[lastMonth] ?: 0f
-            val prevAmount = monthlyExpenses[prevMonth] ?: 0f
-            val change = lastAmount - prevAmount
-            val forecast = lastAmount + change
-            tvForecast.text = "Прогноз на следующий месяц: %.2f руб".format(forecast)
-        } else {
-            tvForecast.text = "Недостаточно данных для прогноза"
-        }
     }
 }
