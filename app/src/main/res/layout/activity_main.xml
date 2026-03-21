@@ -7,6 +7,7 @@
     android:padding="16dp"
     android:background="@android:color/background_dark">
 
+    <!-- Заголовок -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,28 +17,52 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/tvStats"
+    <!-- Карточка с итоговой суммой за месяц -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:background="@android:drawable/edit_text"
         android:layout_marginBottom="16dp"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:text="💰 Общая сумма: 0.00 руб." />
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="#1e4b6e">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Итого за месяц"
+                android:textColor="#b0e0e0"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTotalMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 ₽"
+                android:textColor="#FFD966"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Список счётчиков -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Ряд кнопок (статистика, цели, CSV, Excel, настройки) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:weightSum="5">
 
         <Button
             android:id="@+id/btnStats"
@@ -57,11 +82,20 @@
             android:layout_marginEnd="4dp" />
 
         <Button
-            android:id="@+id/btnExport"
+            android:id="@+id/btnExportCSV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Экспорт"
+            android:text="CSV"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/btnExportExcel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Excel"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp" />
 
@@ -74,6 +108,7 @@
             android:layout_marginStart="4dp" />
     </LinearLayout>
 
+    <!-- Кнопка добавления счётчика (FAB) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
