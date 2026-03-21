@@ -1,11 +1,11 @@
 package com.example.meterreader
 
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class ReadingAdapter(
@@ -28,9 +28,6 @@ class ReadingAdapter(
     }
 
     override fun onBindViewHolder(holder: ReadingViewHolder, position: Int) {
-        // Защита от выхода за границы
-        if (position >= readings.size) return
-
         val reading = readings[position]
 
         holder.tvDate.text = reading.date
@@ -44,24 +41,22 @@ class ReadingAdapter(
 
         holder.tvDiff.text = "Разница: $diff"
 
-        // Короткое нажатие – редактирование
+        // Цветовая индикация разницы
+        val color = if (diff > 0) {
+            ContextCompat.getColor(holder.itemView.context, android.R.color.holo_green_dark)
+        } else if (diff < 0) {
+            ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark)
+        } else {
+            Color.GRAY
+        }
+        holder.tvDiff.setTextColor(color)
+
         holder.itemView.setOnClickListener {
-            try {
-                onItemClick(reading)
-            } catch (e: Exception) {
-                Log.e("ReadingAdapter", "Ошибка при коротком нажатии", e)
-                Toast.makeText(holder.itemView.context, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            onItemClick(reading)
         }
 
-        // Долгое нажатие – удаление
         holder.itemView.setOnLongClickListener {
-            try {
-                onItemLongClick(reading)
-            } catch (e: Exception) {
-                Log.e("ReadingAdapter", "Ошибка при долгом нажатии", e)
-                Toast.makeText(holder.itemView.context, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            onItemLongClick(reading)
             true
         }
     }
