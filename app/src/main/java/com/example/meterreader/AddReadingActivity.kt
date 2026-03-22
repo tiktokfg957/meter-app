@@ -1,19 +1,17 @@
 package com.example.meterreader
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddReadingActivity : AppCompatActivity() {
+class AddReadingActivity : BaseActivity() {
 
     private lateinit var tvMeterInfo: TextView
     private lateinit var etValue: EditText
