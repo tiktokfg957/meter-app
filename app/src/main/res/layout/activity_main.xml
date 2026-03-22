@@ -16,7 +16,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
-    <!-- Карточка с итоговой суммой за месяц -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
