@@ -3,13 +3,12 @@ package com.example.meterreader
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GoalsActivity : AppCompatActivity() {
+class GoalsActivity : BaseActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var btnAddGoal: Button
@@ -43,7 +42,6 @@ class GoalsActivity : AppCompatActivity() {
         val currentMonth = dateFormat.format(Date())
         val goals = dbHelper.getGoalsForMonth(currentMonth)
         val adapter = GoalAdapter(goals, dbHelper) {
-            // Обновить список после изменений
             loadGoals()
         }
         recyclerView.adapter = adapter
