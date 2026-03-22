@@ -105,6 +105,7 @@ class MainActivity : BaseActivity() {
         updateTotalForCurrentMonth()
     }
 
+    // Исправленный метод расчёта итога за месяц
     private fun updateTotalForCurrentMonth() {
         val meters = dbHelper.getAllMeters()
         val readings = dbHelper.getAllReadings()
@@ -112,12 +113,17 @@ class MainActivity : BaseActivity() {
         var totalMonth = 0f
 
         for (meter in meters) {
-            val monthReadings = readings.filter { it.meterId == meter.id && it.date.startsWith(currentMonth) }
+            // Все показания счётчика по дате
+            val allReadings = readings.filter { it.meterId == meter.id }.sortedBy { it.date }
+            // Показания за текущий месяц
+            val monthReadings = allReadings.filter { it.date.startsWith(currentMonth) }
+
             if (monthReadings.isNotEmpty()) {
-                val sorted = monthReadings.sortedBy { it.date }
-                val last = sorted.last()
-                val previous = if (sorted.size > 1) sorted[sorted.size - 2].value else meter.initialReading
-                val diff = last.value - previous
+                val lastOfMonth = monthReadings.last()
+                // Последнее показание до начала текущего месяца (или начальное, если нет)
+                val previous = allReadings.lastOrNull { it.date < currentMonth }
+                val prevValue = previous?.value ?: meter.initialReading
+                val diff = lastOfMonth.value - prevValue
                 totalMonth += diff * meter.tariff
             }
         }
