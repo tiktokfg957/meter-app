@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="#2c3e4e">
+    style="@style/CardViewLight">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,15 +26,15 @@
                 android:layout_weight="1"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/white" />
+                android:textColor="?android:attr/textColorPrimary" />
 
             <TextView
                 android:id="@+id/tvMeterCost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="#ff4081"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="?attr/colorAccent" />
         </LinearLayout>
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="#b0e0e0"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="4dp" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="#b0e0e0"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="4dp" />
 
         <LinearLayout
@@ -62,19 +62,19 @@
 
             <Button
                 android:id="@+id/btnChart"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📊 График"
-                android:textColor="#4ecdc4" />
+                android:text="📈 График"
+                android:textColor="?attr/colorPrimary" />
 
             <Button
                 android:id="@+id/btnDelete"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🗑 Удалить"
-                android:textColor="#d32f2f" />
+                android:textColor="#D32F2F" />
         </LinearLayout>
 
     </LinearLayout>
