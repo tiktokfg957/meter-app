@@ -16,7 +16,7 @@
         android:textColor="?android:attr/textColorPrimary"
         android:layout_marginBottom="16dp" />
 
-    <!-- Карточка итога -->
+    <!-- Карточка с итоговой суммой за месяц -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📢 Наш Telegram-канал: новости разработки, полезные советы по учёту ЖКХ"
+                android:text="📢 Наш Telegram-канал: новости и советы"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorPrimary" />
 
