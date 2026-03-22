@@ -6,11 +6,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddGoalActivity : AppCompatActivity() {
+class AddGoalActivity : BaseActivity() {
 
     private lateinit var spinnerMeter: Spinner
     private lateinit var etTarget: EditText
@@ -27,7 +26,6 @@ class AddGoalActivity : AppCompatActivity() {
         etTarget = findViewById(R.id.etTarget)
         btnSave = findViewById(R.id.btnSaveGoal)
 
-        // Загружаем счётчики для выпадающего списка
         val meters = dbHelper.getAllMeters()
         val meterNames = meters.map { it.name }.toMutableList()
         meterNames.add(0, "Общая цель (все счётчики)")
