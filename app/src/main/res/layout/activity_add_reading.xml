@@ -25,8 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Новые показания"
-            android:inputType="numberDecimal"
-            android:textColorHint="@android:color/darker_gray" />
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -40,9 +39,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="История показаний"
-        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
