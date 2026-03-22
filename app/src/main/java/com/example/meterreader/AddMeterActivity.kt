@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 
-class AddMeterActivity : AppCompatActivity() {
+class AddMeterActivity : BaseActivity() {
 
     private lateinit var etName: EditText
     private lateinit var etType: EditText
     private lateinit var etInitial: EditText
     private lateinit var etTariff: EditText
-    private lateinit var etTag: EditText  // новое поле
+    private lateinit var etTag: EditText
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var dbHelper: DatabaseHelper
-
     private var meterId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
