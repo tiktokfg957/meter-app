@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -37,6 +36,7 @@ class SettingsActivity : AppCompatActivity() {
         selectedTheme = currentTheme ?: "system"
         updateThemeSelection()
 
+        // Обработчики нажатия на карточки тем
         cardLight.setOnClickListener {
             selectedTheme = "light"
             updateThemeSelection()
@@ -47,6 +47,7 @@ class SettingsActivity : AppCompatActivity() {
             updateThemeSelection()
         }
 
+        // Загружаем сохранённый день напоминания
         val reminderDay = prefs.getInt("reminder_day", 1)
         etReminderDay.setText(reminderDay.toString())
 
@@ -54,10 +55,14 @@ class SettingsActivity : AppCompatActivity() {
             val dayStr = etReminderDay.text.toString().trim()
             val day = if (dayStr.isNotEmpty()) dayStr.toInt() else 1
 
-            prefs.edit().putString("theme", selectedTheme).putInt("reminder_day", day).apply()
+            prefs.edit()
+                .putString("theme", selectedTheme)
+                .putInt("reminder_day", day)
+                .apply()
 
             scheduleReminder(day)
 
+            // Перезапускаем главную активность, чтобы применить новую тему
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -65,18 +70,22 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Подсвечивает выбранную карточку темы.
+     * Используем акцентный цвет для выбранной и стандартный фон для невыбранной.
+     */
     private fun updateThemeSelection() {
-        // Обводим выбранную карточку рамкой
-        val borderColor = getColor(android.R.color.holo_blue_dark)
-        val defaultBorder = getColor(android.R.color.transparent)
+        val accentColor = getColor(R.color.accent)          // золотистый акцент
+        val lightCardColor = getColor(android.R.color.white)
+        val darkCardColor = getColor(R.color.card_dark)
 
+        // Для светлой карточки: если выбрана светлая тема – подсвечиваем, иначе – стандартный фон
         cardLight.setCardBackgroundColor(
-            if (selectedTheme == "light") getColor(android.R.color.holo_blue_light)
-            else getColor(android.R.color.white)
+            if (selectedTheme == "light") accentColor else lightCardColor
         )
+        // Для тёмной карточки: если выбрана тёмная тема – подсвечиваем, иначе – тёмный фон
         cardDark.setCardBackgroundColor(
-            if (selectedTheme == "dark") getColor(android.R.color.holo_blue_light)
-            else getColor(android.R.color.darker_gray)
+            if (selectedTheme == "dark") accentColor else darkCardColor
         )
     }
 
