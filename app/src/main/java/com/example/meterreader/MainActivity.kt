@@ -26,7 +26,6 @@ class MainActivity : BaseActivity() {
     private lateinit var btnExportCSV: Button
     private lateinit var btnExportExcel: Button
     private lateinit var btnSettings: Button
-    private lateinit var btnTelegram: Button
     private lateinit var tvTotalMonth: TextView
     private lateinit var dbHelper: DatabaseHelper
 
@@ -43,7 +42,6 @@ class MainActivity : BaseActivity() {
         btnExportCSV = findViewById(R.id.btnExportCSV)
         btnExportExcel = findViewById(R.id.btnExportExcel)
         btnSettings = findViewById(R.id.btnSettings)
-        btnTelegram = findViewById(R.id.btnTelegram)
         tvTotalMonth = findViewById(R.id.tvTotalMonth)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -72,6 +70,8 @@ class MainActivity : BaseActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        // Кнопка Telegram-канала
+        val btnTelegram = findViewById<Button>(R.id.btnTelegram)
         btnTelegram.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/zhku_app_news"))
             startActivity(intent)
@@ -125,7 +125,102 @@ class MainActivity : BaseActivity() {
         tvTotalMonth.text = "%.2f ₽".format(totalMonth)
     }
 
-    // Методы экспорта (без изменений)
-    private fun exportToCSV() { /* ... */ }
-    private fun exportToExcel() { /* ... */ }
+    private fun exportToCSV() {
+        try {
+            val meters = dbHelper.getAllMeters()
+            val readings = dbHelper.getAllReadings()
+
+            val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+            val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.csv")
+
+            FileWriter(file).use { writer ->
+                CSVWriter(writer).use { csvWriter ->
+                    csvWriter.writeNext(arrayOf(
+                        "ID счётчика", "Название", "Тип", "Дата", "Показания", "Разница", "Стоимость"
+                    ))
+
+                    for (meter in meters) {
+                        val meterReadings = readings.filter { it.meterId == meter.id }
+                        for (i in meterReadings.indices) {
+                            val reading = meterReadings[i]
+                            val diff = if (i > 0) {
+                                reading.value - meterReadings[i-1].value
+                            } else {
+                                reading.value - meter.initialReading
+                            }
+                            val cost = diff * meter.tariff
+
+                            csvWriter.writeNext(arrayOf(
+                                meter.id.toString(),
+                                meter.name,
+                                meter.type,
+                                reading.date,
+                                reading.value.toString(),
+                                diff.toString(),
+                                "%.2f".format(cost)
+                            ))
+                        }
+                    }
+                }
+            }
+
+            Toast.makeText(this, "CSV сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exportToExcel() {
+        try {
+            val meters = dbHelper.getAllMeters()
+            val readings = dbHelper.getAllReadings()
+
+            val workbook: Workbook = XSSFWorkbook()
+            val sheet = workbook.createSheet("Показания")
+
+            val headerRow = sheet.createRow(0)
+            headerRow.createCell(0).setCellValue("ID счётчика")
+            headerRow.createCell(1).setCellValue("Название")
+            headerRow.createCell(2).setCellValue("Тип")
+            headerRow.createCell(3).setCellValue("Дата")
+            headerRow.createCell(4).setCellValue("Показания")
+            headerRow.createCell(5).setCellValue("Разница")
+            headerRow.createCell(6).setCellValue("Стоимость")
+
+            var rowNum = 1
+            for (meter in meters) {
+                val meterReadings = readings.filter { it.meterId == meter.id }
+                for (i in meterReadings.indices) {
+                    val reading = meterReadings[i]
+                    val diff = if (i > 0) {
+                        reading.value - meterReadings[i-1].value
+                    } else {
+                        reading.value - meter.initialReading
+                    }
+                    val cost = diff * meter.tariff
+
+                    val row = sheet.createRow(rowNum++)
+                    row.createCell(0).setCellValue(meter.id.toDouble())
+                    row.createCell(1).setCellValue(meter.name)
+                    row.createCell(2).setCellValue(meter.type)
+                    row.createCell(3).setCellValue(reading.date)
+                    row.createCell(4).setCellValue(reading.value.toDouble())
+                    row.createCell(5).setCellValue(diff.toDouble())
+                    row.createCell(6).setCellValue(cost.toDouble())
+                }
+            }
+
+            val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+            val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.xlsx")
+
+            file.outputStream().use { outputStream ->
+                workbook.write(outputStream)
+            }
+            workbook.close()
+
+            Toast.makeText(this, "Excel сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
