@@ -16,14 +16,14 @@
         android:textColor="?android:attr/textColorPrimary"
         android:layout_marginBottom="16dp" />
 
-    <!-- Карточка с итоговой суммой за месяц (более современная) -->
+    <!-- Карточка итога -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp"
-        style="@style/CardViewLight">
+        style="?attr/cardViewStyle">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -116,6 +116,41 @@
             android:layout_marginStart="4dp"
             android:textAllCaps="false" />
     </LinearLayout>
+
+    <!-- Карточка Telegram-канала -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardTelegram"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        style="?attr/cardViewStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="📢 Наш Telegram-канал: новости разработки, полезные советы по учёту ЖКХ"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <Button
+                android:id="@+id/btnTelegram"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Перейти"
+                android:textColor="?attr/colorAccent" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
