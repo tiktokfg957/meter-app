@@ -2,7 +2,6 @@ package com.example.meterreader
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -10,7 +9,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import java.text.SimpleDateFormat
 import java.util.*
 
-class StatisticsActivity : AppCompatActivity() {
+class StatisticsActivity : BaseActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var tvPeak: TextView
@@ -34,7 +33,6 @@ class StatisticsActivity : AppCompatActivity() {
         val meters = dbHelper.getAllMeters()
         val readings = dbHelper.getAllReadings()
 
-        // Подготовим данные по месяцам (расходы)
         val monthlyExpenses = mutableMapOf<String, Float>()
         val categoryExpenses = mutableMapOf<String, Float>()
 
@@ -44,14 +42,14 @@ class StatisticsActivity : AppCompatActivity() {
             for (reading in meterReadings) {
                 val diff = reading.value - prevReading
                 val cost = diff * meter.tariff
-                val month = reading.date.substring(0, 7) // yyyy-MM
+                val month = reading.date.substring(0, 7)
                 monthlyExpenses[month] = monthlyExpenses.getOrDefault(month, 0f) + cost
                 categoryExpenses[meter.type] = categoryExpenses.getOrDefault(meter.type, 0f) + cost
                 prevReading = reading.value
             }
         }
 
-        // Строим барчарт
+        // Bar chart
         val months = monthlyExpenses.keys.sorted()
         val entries = months.mapIndexed { index, month ->
             BarEntry(index.toFloat(), monthlyExpenses[month] ?: 0f)
@@ -62,7 +60,7 @@ class StatisticsActivity : AppCompatActivity() {
         barChart.data = barData
         barChart.invalidate()
 
-        // Находим пик потребления (максимальное значение)
+        // Пик потребления
         if (entries.isNotEmpty()) {
             val maxEntry = entries.maxByOrNull { it.y }
             val maxIndex = maxEntry?.x?.toInt() ?: 0
@@ -73,7 +71,7 @@ class StatisticsActivity : AppCompatActivity() {
             tvPeak.text = "Нет данных для определения пика"
         }
 
-        // Круговая диаграмма по категориям
+        // Pie chart
         val pieEntries = categoryExpenses.map { (category, amount) ->
             PieEntry(amount, category)
         }
