@@ -1,29 +1,32 @@
 package com.example.meterreader
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class ChangelogDialog(context: Context) : Dialog(context) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_changelog)
+class ChangelogDialog : DialogFragment() {
 
-        val tvTitle = findViewById<TextView>(R.id.tvChangelogTitle)
-        val tvContent = findViewById<TextView>(R.id.tvChangelogContent)
-        val btnClose = findViewById<Button>(R.id.btnChangelogClose)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.dialog_changelog, container, false)
+    }
 
-        tvTitle.text = "Что нового в версии 1.0.10"
-        tvContent.text = "✨ PRO версия с пробным периодом!\n" +
-                "   • Экспорт в Excel\n" +
-                "   • Расширенная статистика\n" +
-                "   • Дополнительные темы оформления\n\n" +
-                "📱 Наша страница VK: новости и советы\n\n" +
-                "🔔 Теперь вы можете активировать PRO на 4 дня, подписавшись на VK-паблик"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val btnClose = view.findViewById<Button>(R.id.btnChangelogClose)
+        btnClose.setOnClickListener {
+            dismiss()
+        }
+    }
 
-        btnClose.setOnClickListener { dismiss() }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return MaterialAlertDialogBuilder(requireContext())
+            .setView(LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null))
+            .setCancelable(true)
+            .create()
     }
 }
