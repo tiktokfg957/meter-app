@@ -20,11 +20,16 @@
     <string name="csv_exported">CSV экспортирован</string>
     <string name="excel_exported">Excel экспортирован</string>
     <string name="export_error">Ошибка экспорта</string>
-
-    <!-- Новые строки для обновления -->
     <string name="statistics">Статистика</string>
     <string name="goals">Цели</string>
     <string name="add_goal">Добавить цель</string>
     <string name="target_amount">Целевая сумма</string>
     <string name="tag">Тег</string>
+    <string name="telegram_channel">📢 Наш Telegram-канал: новости и советы</string>
+
+    <!-- PRO версия -->
+    <string name="pro_title">PRO версия</string>
+    <string name="pro_features">✨ Расширенная статистика:\n   • Прогноз расхода на следующий месяц\n   • Сравнение с прошлым годом\n   • Экспорт статистики в PDF\n📊 Экспорт в Excel\n🎨 Дополнительные темы оформления</string>
+    <string name="pro_button">Купить за 99 ₽</string>
+    <string name="pro_demo">Демо-версия. Оплата пока не подключена.</string>
 </resources>
