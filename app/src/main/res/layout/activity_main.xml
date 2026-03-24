@@ -24,7 +24,6 @@
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <!-- Улучшенный PRO-бейдж: тёмно-синий фон, золотой текст -->
         <TextView
             android:id="@+id/tvProBadge"
             android:layout_width="wrap_content"
@@ -144,9 +143,9 @@
             android:textAllCaps="false" />
     </LinearLayout>
 
-    <!-- Карточка Telegram-канала -->
+    <!-- Карточка VK-паблика -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardTelegram"
+        android:id="@+id/cardVK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -165,12 +164,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📢 Наш Telegram-канал: новости и советы"
+                android:text="📱 Наша страница VK: новости и советы"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorPrimary" />
 
             <Button
-                android:id="@+id/btnTelegram"
+                android:id="@+id/btnVK"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
