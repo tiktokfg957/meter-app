@@ -24,21 +24,23 @@
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary" />
 
+        <!-- Улучшенный PRO-бейдж с градиентом, иконкой и тенью -->
         <TextView
             android:id="@+id/tvProBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PRO версия"
-            android:textSize="14sp"
-            android:textColor="?attr/colorAccent"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
+            android:text=" ⭐ PRO версия"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
             android:gravity="center"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/pro_badge_background"
-            android:elevation="2dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            android:background="@drawable/pro_badge_background_gradient"
+            android:elevation="6dp"
+            android:translationZ="2dp" />
     </LinearLayout>
 
     <!-- Карточка с итоговой суммой за месяц -->
