@@ -115,6 +115,32 @@
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Блок PRO -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PRO версия"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvProStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PRO не активирован"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnActivatePro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Активировать PRO (4 дня за подписку на VK)"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
     <Button
         android:id="@+id/btnSaveTheme"
         android:layout_width="match_parent"
