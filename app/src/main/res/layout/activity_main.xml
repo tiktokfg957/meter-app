@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="?android:attr/windowBackground">
+    android:background="@drawable/gradient_background">
 
     <!-- Верхняя панель с заголовком и PRO бейджем -->
     <LinearLayout
@@ -22,7 +22,7 @@
             android:text="Мои счётчики"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/tvProBadge"
@@ -49,7 +49,7 @@
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp"
-        style="?attr/cardViewStyle">
+        app:cardBackgroundColor="#FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="💰 Итого за месяц"
                 android:textSize="16sp"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textColor="#1E4B6E" />
 
             <TextView
                 android:id="@+id/tvTotalMonth"
@@ -71,7 +71,7 @@
                 android:text="0 ₽"
                 android:textSize="36sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorAccent" />
+                android:textColor="#FFB74D" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -97,7 +97,9 @@
             android:layout_weight="1"
             android:text="Статистика"
             android:layout_marginEnd="4dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="?attr/colorAccent" />
 
         <Button
             android:id="@+id/btnGoals"
@@ -108,7 +110,9 @@
             android:text="Цели"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="?attr/colorAccent" />
 
         <Button
             android:id="@+id/btnExportCSV"
@@ -119,7 +123,9 @@
             android:text="CSV"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="?attr/colorAccent" />
 
         <Button
             android:id="@+id/btnExportExcel"
@@ -130,7 +136,9 @@
             android:text="Excel"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="?attr/colorAccent" />
 
         <Button
             android:id="@+id/btnSettings"
@@ -140,7 +148,9 @@
             android:layout_weight="1"
             android:text="Настройки"
             android:layout_marginStart="4dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="?attr/colorAccent" />
     </LinearLayout>
 
     <!-- Карточка VK-паблика -->
@@ -151,7 +161,7 @@
         android:layout_marginTop="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
-        style="?attr/cardViewStyle">
+        app:cardBackgroundColor="#FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,7 +176,7 @@
                 android:layout_weight="1"
                 android:text="📱 Наша страница VK: новости и советы"
                 android:textSize="14sp"
-                android:textColor="?android:attr/textColorPrimary" />
+                android:textColor="#1E4B6E" />
 
             <Button
                 android:id="@+id/btnVK"
@@ -185,6 +195,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="?attr/colorPrimary" />
+        app:backgroundTint="?attr/colorAccent" />
 
 </LinearLayout>
