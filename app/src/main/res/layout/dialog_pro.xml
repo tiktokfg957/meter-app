@@ -27,7 +27,6 @@
         android:lineSpacingExtra="6dp"
         android:layout_marginBottom="24dp" />
 
-    <!-- Вместо кнопки покупки – информационная кнопка -->
     <Button
         android:id="@+id/btnInfo"
         android:layout_width="match_parent"
