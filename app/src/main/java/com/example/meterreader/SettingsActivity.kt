@@ -1,6 +1,7 @@
 package com.example.meterreader
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -71,6 +72,12 @@ class SettingsActivity : BaseActivity() {
         btnActivatePro.setOnClickListener {
             activateProTrial()
         }
+
+        // Раздел "О приложении"
+        val btnAbout = findViewById<Button>(R.id.btnAbout)
+        btnAbout.setOnClickListener {
+            showAboutDialog()
+        }
     }
 
     private fun updateThemeSelection() {
@@ -126,11 +133,9 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun activateProTrial() {
-        // Открываем VK для подписки
         val vkIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/club236967018"))
         startActivity(vkIntent)
 
-        // Активируем пробный период на 4 дня
         val expiry = System.currentTimeMillis() + 4 * 24 * 60 * 60 * 1000L
         prefs.edit()
             .putBoolean("isPro", true)
@@ -140,5 +145,39 @@ class SettingsActivity : BaseActivity() {
         Toast.makeText(this, "Пробный период PRO активирован на 4 дня! Спасибо за подписку.", Toast.LENGTH_LONG).show()
 
         updateProStatus()
+    }
+
+    private fun showAboutDialog() {
+        val versionName = try {
+            packageManager.getPackageInfo(packageName, 0).versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            "1.0"
+        }
+
+        val message = """
+            Версия: $versionName
+            Разработчик: Пищихин Дмитрий
+            
+            Приложение для учёта показаний счётчиков воды, электричества и газа.
+            Все данные хранятся локально на вашем устройстве.
+            
+            Ссылки:
+            • Страница VK: https://vk.com/club236967018
+            • Политика конфиденциальности: https://www.rustore.ru/catalog/app/com.example.meterreader/privacy
+            • Поддержка: pisihindmitrij0@gmail.com
+        """.trimIndent()
+
+        android.app.AlertDialog.Builder(this)
+            .setTitle("О приложении")
+            .setMessage(message)
+            .setPositiveButton("Поделиться") { _, _ ->
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, "Попробуйте приложение «Учёт ЖКХ» для учёта показаний счётчиков! Скачать в RuStore: https://www.rustore.ru/catalog/app/com.example.meterreader")
+                }
+                startActivity(Intent.createChooser(shareIntent, "Поделиться приложением"))
+            }
+            .setNegativeButton("Закрыть", null)
+            .show()
     }
 }
