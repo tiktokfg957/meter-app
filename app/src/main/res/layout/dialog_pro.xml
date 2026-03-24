@@ -27,21 +27,23 @@
         android:lineSpacingExtra="6dp"
         android:layout_marginBottom="24dp" />
 
+    <!-- Вместо кнопки покупки – информационная кнопка -->
     <Button
-        android:id="@+id/btnBuyPro"
+        android:id="@+id/btnInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pro_button"
+        android:text="Скоро будет доступно"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:backgroundTint="?attr/colorAccent"
+        android:backgroundTint="#CCCCCC"
+        android:enabled="false"
         android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pro_demo"
+        android:text="Для активации пробного периода перейдите в настройки → PRO версия"
         android:textSize="12sp"
         android:textColor="#CCFFFFFF"
         android:gravity="center" />
