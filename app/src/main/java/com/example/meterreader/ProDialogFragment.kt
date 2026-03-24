@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ProDialogFragment : BottomSheetDialogFragment() {
@@ -21,12 +20,9 @@ class ProDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnBuy = view.findViewById<Button>(R.id.btnBuyPro)
-        btnBuy.setOnClickListener {
-            // Демо-режим, реальной оплаты нет
-            Toast.makeText(requireContext(), "Демо: оплата не подключена, но функции PRO можно протестировать вручную", Toast.LENGTH_LONG).show()
-            dismiss()
-        }
+        // Кнопка теперь информационная, ничего не делает
+        val btnInfo = view.findViewById<Button>(R.id.btnInfo)
+        btnInfo.isEnabled = false
     }
 
     override fun getTheme(): Int = R.style.AppTheme_Dialog
