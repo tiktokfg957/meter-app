@@ -20,7 +20,6 @@ class ProDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Кнопка теперь информационная, ничего не делает
         val btnInfo = view.findViewById<Button>(R.id.btnInfo)
         btnInfo.isEnabled = false
     }
