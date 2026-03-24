@@ -77,6 +77,13 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        // Кнопка PRO версия
+        val tvProBadge = findViewById<TextView>(R.id.tvProBadge)
+        tvProBadge.setOnClickListener {
+            val dialog = ProDialogFragment()
+            dialog.show(supportFragmentManager, "pro_dialog")
+        }
+
         loadMeters()
     }
 
@@ -105,7 +112,6 @@ class MainActivity : BaseActivity() {
         updateTotalForCurrentMonth()
     }
 
-    // Исправленный метод расчёта итога за месяц
     private fun updateTotalForCurrentMonth() {
         val meters = dbHelper.getAllMeters()
         val readings = dbHelper.getAllReadings()
@@ -113,14 +119,11 @@ class MainActivity : BaseActivity() {
         var totalMonth = 0f
 
         for (meter in meters) {
-            // Все показания счётчика по дате
             val allReadings = readings.filter { it.meterId == meter.id }.sortedBy { it.date }
-            // Показания за текущий месяц
             val monthReadings = allReadings.filter { it.date.startsWith(currentMonth) }
 
             if (monthReadings.isNotEmpty()) {
                 val lastOfMonth = monthReadings.last()
-                // Последнее показание до начала текущего месяца (или начальное, если нет)
                 val previous = allReadings.lastOrNull { it.date < currentMonth }
                 val prevValue = previous?.value ?: meter.initialReading
                 val diff = lastOfMonth.value - prevValue
