@@ -7,14 +7,39 @@
     android:padding="16dp"
     android:background="?android:attr/windowBackground">
 
-    <TextView
+    <!-- Верхняя панель с заголовком и PRO бейджем -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Мои счётчики"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
-        android:layout_marginBottom="16dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Мои счётчики"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/tvProBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRO версия"
+            android:textSize="14sp"
+            android:textColor="?attr/colorAccent"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/pro_badge_background"
+            android:elevation="2dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+    </LinearLayout>
 
     <!-- Карточка с итоговой суммой за месяц -->
     <androidx.cardview.widget.CardView
@@ -69,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="📊 Статистика"
+            android:text="Статистика"
             android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
@@ -79,7 +104,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="🎯 Цели"
+            android:text="Цели"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
@@ -112,7 +137,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="⚙️ Настройки"
+            android:text="Настройки"
             android:layout_marginStart="4dp"
             android:textAllCaps="false" />
     </LinearLayout>
