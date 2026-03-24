@@ -4,19 +4,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/background_dark">
+    android:background="@drawable/gradient_background">
 
-    <Button
-        android:id="@+id/btnAddGoal"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Добавить цель"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#FFFFFF">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewGoals"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <Button
+                android:id="@+id/btnAddGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Добавить цель"
+                android:backgroundTint="?attr/colorAccent"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewGoals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
