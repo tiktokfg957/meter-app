@@ -4,37 +4,34 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@drawable/gradient_animated"
-    android:animateLayoutChanges="true">
+    android:background="@drawable/gradient_background">
 
     <TextView
-        android:id="@+id/tvChangelogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Что нового"
+        android:text="🎉 Что нового?"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"
-        android:layout_gravity="center" />
+        android:textColor="#FFFFFF"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp" />
 
     <TextView
-        android:id="@+id/tvChangelogContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="✨ PRO версия с расширенной статистикой и экспортом в Excel\n🔓 Пробный период 4 дня за подписку на VK\n📱 Страница VK для новостей\n🎨 Новый дизайн приложения\n⚡ Улучшенная производительность"
         android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:lineSpacingExtra="6dp"
+        android:textColor="#FFFFFF"
+        android:lineSpacingExtra="8dp"
         android:layout_marginBottom="24dp" />
 
     <Button
         android:id="@+id/btnChangelogClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Понятно"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:text="Понятно, спасибо!"
         android:backgroundTint="?attr/colorAccent"
-        android:padding="12dp" />
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
 </LinearLayout>
