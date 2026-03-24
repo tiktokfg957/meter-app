@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/background_dark">
+    android:background="@drawable/gradient_background">
 
     <TextView
         android:layout_width="match_parent"
@@ -105,14 +105,18 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="24dp"
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="#FFFFFF"
+        app:hintTextColor="#1E4B6E">
 
         <EditText
             android:id="@+id/etReminderDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="День месяца (1-31)"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="#1E4B6E" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Блок PRO -->
@@ -139,12 +143,27 @@
         android:layout_height="wrap_content"
         android:text="Активировать PRO (4 дня за подписку на VK)"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="?attr/colorAccent" />
+
+    <!-- О приложении -->
+    <Button
+        android:id="@+id/btnAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="О приложении"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#666666" />
 
     <Button
         android:id="@+id/btnSaveTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сохранить" />
+        android:text="Сохранить"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="?attr/colorAccent" />
 
 </LinearLayout>
