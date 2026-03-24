@@ -24,7 +24,7 @@
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <!-- Улучшенный PRO-бейдж с градиентом, иконкой и тенью -->
+        <!-- Улучшенный PRO-бейдж: тёмно-синий фон, золотой текст -->
         <TextView
             android:id="@+id/tvProBadge"
             android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
             android:text=" ⭐ PRO версия"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#ffffff"
+            android:textColor="#FFD966"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:gravity="center"
