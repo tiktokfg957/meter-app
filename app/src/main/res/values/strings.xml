@@ -32,4 +32,6 @@
     <string name="pro_features">✨ Расширенная статистика:\n   • Прогноз расхода на следующий месяц\n   • Сравнение с прошлым годом\n   • Экспорт статистики в PDF\n📊 Экспорт в Excel\n🎨 Дополнительные темы оформления</string>
     <string name="pro_button">Купить за 99 ₽</string>
     <string name="pro_demo">Демо-версия. Оплата пока не подключена.</string>
+    <string name="pro_coming_soon">Скоро будет доступно</string>
+    <string name="pro_trial_info">Для активации пробного периода перейдите в настройки → PRO версия</string>
 </resources>
