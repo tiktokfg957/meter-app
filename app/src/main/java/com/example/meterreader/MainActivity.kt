@@ -63,21 +63,26 @@ class MainActivity : BaseActivity() {
         }
 
         btnExportExcel.setOnClickListener {
-            exportToExcel()
+            if (isProActive()) {
+                exportToExcel()
+            } else {
+                Toast.makeText(this, "Функция доступна в PRO версии. Активируйте в настройках", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
         }
 
         btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        // Кнопка Telegram-канала
-        val btnTelegram = findViewById<Button>(R.id.btnTelegram)
-        btnTelegram.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/zhku_app_news"))
+        // Кнопка VK-паблика
+        val btnVK = findViewById<Button>(R.id.btnVK)
+        btnVK.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/club236967018"))
             startActivity(intent)
         }
 
-        // Кнопка PRO версия
+        // PRO-бейдж
         val tvProBadge = findViewById<TextView>(R.id.tvProBadge)
         tvProBadge.setOnClickListener {
             val dialog = ProDialogFragment()
@@ -231,5 +236,12 @@ class MainActivity : BaseActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun isProActive(): Boolean {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isPro = prefs.getBoolean("isPro", false)
+        val expiry = prefs.getLong("proExpiryDate", 0)
+        return isPro || expiry > System.currentTimeMillis()
     }
 }
