@@ -4,47 +4,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/background_dark">
+    android:background="@drawable/gradient_background">
 
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Новая цель"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#FFFFFF">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выберите счётчик:"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="8dp"/>
-
-    <Spinner
-        android:id="@+id/spinnerMeter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
-
-        <EditText
-            android:id="@+id/etTarget"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Целевая сумма экономии (руб)"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnSaveGoal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сохранить"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Новая цель"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#1E4B6E"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Выберите счётчик:"
+                android:textColor="#1E4B6E"
+                android:layout_marginBottom="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerMeter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:boxBackgroundMode="filled"
+                app:boxBackgroundColor="#F5F5F5"
+                app:hintTextColor="#1E4B6E">
+
+                <EditText
+                    android:id="@+id/etTarget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Целевая сумма экономии (руб)"
+                    android:inputType="numberDecimal"
+                    android:textColor="#1E4B6E" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnSaveGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сохранить"
+                android:backgroundTint="?attr/colorAccent"
+                android:textColor="#FFFFFF"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
