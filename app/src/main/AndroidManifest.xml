@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -17,17 +18,17 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddMeterActivity"/>
-        <activity android:name=".AddReadingActivity"/>
-        <activity android:name=".ChartActivity"/>
-        <activity android:name=".SettingsActivity"/>
-        <activity android:name=".StatisticsActivity"/>
-        <activity android:name=".GoalsActivity"/>
-        <activity android:name=".AddGoalActivity"/>
+        <activity android:name=".AddMeterActivity" />
+        <activity android:name=".AddReadingActivity" />
+        <activity android:name=".ChartActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".StatisticsActivity" />
+        <activity android:name=".GoalsActivity" />
+        <activity android:name=".AddGoalActivity" />
     </application>
 
 </manifest>
