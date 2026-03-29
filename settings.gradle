@@ -10,7 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }  // добавлено для MPAndroidChart
+        maven { url "https://mobile-ads.yandex.ru/" }   // <-- добавляем репозиторий Яндекса
+        maven { url "https://jitpack.io" }
     }
 }
 rootProject.name = "MeterReader"
