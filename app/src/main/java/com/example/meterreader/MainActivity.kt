@@ -3,12 +3,18 @@ package com.example.meterreader
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.yandex.mobile.ads.AdRequest
+import com.yandex.mobile.ads.AdRequestError
+import com.yandex.mobile.ads.AdSize
+import com.yandex.mobile.ads.banner.BannerAdView
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -75,26 +81,50 @@ class MainActivity : BaseActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        // Кнопка VK-паблика
         val btnVK = findViewById<Button>(R.id.btnVK)
         btnVK.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/club236967018"))
             startActivity(intent)
         }
 
+        // PRO-бейдж
         val tvProBadge = findViewById<TextView>(R.id.tvProBadge)
         tvProBadge.setOnClickListener {
             val dialog = ProDialogFragment()
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
+        // Рекламный баннер
+        val banner = BannerAdView(this).apply {
+            setAdUnitId("R-M-18995591-1")
+            setAdSize(AdSize.fixedSize(320, 50))
+            setAdListener(object : BannerAdView.AdListener {
+                override fun onAdLoaded() {
+                    findViewById<FrameLayout>(R.id.bannerContainer).visibility = View.VISIBLE
+                }
+                override fun onAdFailedToLoad(error: AdRequestError) {
+                    findViewById<FrameLayout>(R.id.bannerContainer).visibility = View.GONE
+                }
+                override fun onAdClicked() {}
+            })
+            loadAd(AdRequest.Builder().build())
+        }
+        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainer)
+        bannerContainer.addView(banner)
+
         loadMeters()
-        checkFirstLaunch()
     }
 
     override fun onResume() {
         super.onResume()
         loadMeters()
-        maybeShowRateDialog()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val banner = findViewById<FrameLayout>(R.id.bannerContainer)?.getChildAt(0) as? BannerAdView
+        banner?.destroy()
     }
 
     private fun loadMeters() {
@@ -243,28 +273,5 @@ class MainActivity : BaseActivity() {
         val isPro = prefs.getBoolean("isPro", false)
         val expiry = prefs.getLong("proExpiryDate", 0)
         return isPro || expiry > System.currentTimeMillis()
-    }
-
-    private fun checkFirstLaunch() {
-        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val lastVersion = prefs.getInt("last_version_code", 0)
-        val currentVersion = packageManager.getPackageInfo(packageName, 0).versionCode
-        if (currentVersion > lastVersion) {
-            // Показываем диалог с изменениями
-            ChangelogDialog().show(supportFragmentManager, "changelog")
-            prefs.edit().putInt("last_version_code", currentVersion).apply()
-        }
-    }
-
-    private fun maybeShowRateDialog() {
-        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val isPro = prefs.getBoolean("isPro", false)
-        val meterAddedCount = prefs.getInt("meter_added_count", 0)
-        val rateDialogShown = prefs.getBoolean("rate_dialog_shown", false)
-
-        if (!rateDialogShown && (isPro || meterAddedCount >= 3)) {
-            RateDialog().show(supportFragmentManager, "rate_dialog")
-            prefs.edit().putBoolean("rate_dialog_shown", true).apply()
-        }
     }
 }
