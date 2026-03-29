@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://mobile-ads.yandex.ru/" }   // <-- добавляем репозиторий Яндекса
+        maven { url "https://mobile-ads.yandex.ru/" }
         maven { url "https://jitpack.io" }
     }
 }
