@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yandex.mobile.ads.AdRequest
-import com.yandex.mobile.ads.AdRequestError
 import com.yandex.mobile.ads.AdSize
 import com.yandex.mobile.ads.banner.BannerAdView
 import java.io.File
@@ -95,7 +94,7 @@ class MainActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
-        // ========== РЕКЛАМНЫЙ БАННЕР ==========
+        // ========== Рекламный баннер ==========
         val banner = BannerAdView(this).apply {
             setAdUnitId("R-M-18995591-1")          // ваш ID блока
             setAdSize(AdSize.fixedSize(320, 50))
@@ -123,8 +122,8 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val banner = findViewById<FrameLayout>(R.id.bannerContainer)?.getChildAt(0) as? BannerAdView
-        banner?.destroy()
+        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainer)
+        bannerContainer.removeAllViews()
     }
 
     private fun loadMeters() {
