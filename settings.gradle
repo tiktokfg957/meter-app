@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://maven.yandex.ru/repository/yandex-ads/" }   // правильный репозиторий
+        maven { url "https://maven.yandex.ru/repository/yandex-ads/" }
         maven { url "https://jitpack.io" }
     }
 }
