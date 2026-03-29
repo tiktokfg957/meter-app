@@ -95,9 +95,9 @@ class MainActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
-        // Рекламный баннер
+        // ========== РЕКЛАМНЫЙ БАННЕР ==========
         val banner = BannerAdView(this).apply {
-            setAdUnitId("R-M-18995591-1")
+            setAdUnitId("R-M-18995591-1")          // ваш ID блока
             setAdSize(AdSize.fixedSize(320, 50))
             setAdListener(object : BannerAdView.AdListener {
                 override fun onAdLoaded() {
