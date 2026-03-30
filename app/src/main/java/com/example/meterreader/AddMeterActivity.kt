@@ -33,7 +33,6 @@ class AddMeterActivity : BaseActivity() {
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
 
-        // Загрузка объектов
         objectsList = dbHelper.getAllObjects()
         val objectNames = objectsList.map { it.name }
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, objectNames)
@@ -45,13 +44,8 @@ class AddMeterActivity : BaseActivity() {
             loadMeterData()
         }
 
-        btnSave.setOnClickListener {
-            saveMeter()
-        }
-
-        btnCancel.setOnClickListener {
-            finish()
-        }
+        btnSave.setOnClickListener { saveMeter() }
+        btnCancel.setOnClickListener { finish() }
     }
 
     private fun loadMeterData() {
