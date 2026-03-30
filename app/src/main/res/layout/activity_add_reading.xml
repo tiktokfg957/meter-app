@@ -74,4 +74,14 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Анимация успеха (галочка) -->
+    <ImageView
+        android:id="@+id/checkmark_animation"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+
 </LinearLayout>
