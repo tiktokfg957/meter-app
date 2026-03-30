@@ -25,6 +25,30 @@
         <activity android:name=".StatisticsActivity" />
         <activity android:name=".GoalsActivity" />
         <activity android:name=".AddGoalActivity" />
+
+        <!-- Виджеты -->
+        <receiver
+            android:name=".widget.MonthlyCostWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/monthly_cost_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.GraphWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/graph_widget_info" />
+        </receiver>
+
     </application>
 
 </manifest>
