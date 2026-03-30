@@ -36,7 +36,9 @@ data class ObjectData(
     var name: String = "",
     var reminderDay: Int = 1,
     var isDefault: Boolean = false
-)
+) {
+    override fun toString(): String = name
+}
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 4) {
 
