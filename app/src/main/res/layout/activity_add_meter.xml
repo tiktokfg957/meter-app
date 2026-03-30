@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -29,6 +30,7 @@
                 android:textColor="#1E4B6E"
                 android:layout_marginBottom="24dp" />
 
+            <!-- Название -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,9 +38,17 @@
                 app:boxBackgroundMode="filled"
                 app:boxBackgroundColor="#F5F5F5"
                 app:hintTextColor="#1E4B6E">
-                <EditText android:id="@+id/etMeterName" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Название счётчика" android:inputType="text" android:textColor="#1E4B6E" />
+
+                <EditText
+                    android:id="@+id/etMeterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Название счётчика"
+                    android:inputType="text"
+                    android:textColor="#1E4B6E" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Тип -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,9 +56,17 @@
                 app:boxBackgroundMode="filled"
                 app:boxBackgroundColor="#F5F5F5"
                 app:hintTextColor="#1E4B6E">
-                <EditText android:id="@+id/etMeterType" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Тип (Вода/Свет/Газ)" android:inputType="text" android:textColor="#1E4B6E" />
+
+                <EditText
+                    android:id="@+id/etMeterType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Тип (Вода/Свет/Газ)"
+                    android:inputType="text"
+                    android:textColor="#1E4B6E" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Начальные показания -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,9 +74,17 @@
                 app:boxBackgroundMode="filled"
                 app:boxBackgroundColor="#F5F5F5"
                 app:hintTextColor="#1E4B6E">
-                <EditText android:id="@+id/etInitialReading" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Начальные показания" android:inputType="numberDecimal" android:textColor="#1E4B6E" />
+
+                <EditText
+                    android:id="@+id/etInitialReading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Начальные показания"
+                    android:inputType="numberDecimal"
+                    android:textColor="#1E4B6E" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Тариф -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,9 +92,17 @@
                 app:boxBackgroundMode="filled"
                 app:boxBackgroundColor="#F5F5F5"
                 app:hintTextColor="#1E4B6E">
-                <EditText android:id="@+id/etTariff" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Тариф (руб/ед.)" android:inputType="numberDecimal" android:textColor="#1E4B6E" />
+
+                <EditText
+                    android:id="@+id/etTariff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Тариф (руб/ед.)"
+                    android:inputType="numberDecimal"
+                    android:textColor="#1E4B6E" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Тег -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,9 +110,17 @@
                 app:boxBackgroundMode="filled"
                 app:boxBackgroundColor="#F5F5F5"
                 app:hintTextColor="#1E4B6E">
-                <EditText android:id="@+id/etTag" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Тег (например, Квартира, Дача)" android:inputType="text" android:textColor="#1E4B6E" />
+
+                <EditText
+                    android:id="@+id/etTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Тег (например, Квартира, Дача)"
+                    android:inputType="text"
+                    android:textColor="#1E4B6E" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Объект -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,6 +161,8 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
 </LinearLayout>
