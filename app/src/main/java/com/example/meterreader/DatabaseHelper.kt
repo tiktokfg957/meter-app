@@ -2,16 +2,19 @@ package com.example.meterreader
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+// Data classes
 data class Meter(
     var id: Long = 0,
     var name: String = "",
     var type: String = "",
     var initialReading: Float = 0f,
     var tariff: Float = 0f,
-    var tag: String = ""  // новое поле для тега
+    var tag: String = "",
+    var objectId: Long = 0   // <-- новый ключ
 )
 
 data class Reading(
@@ -23,16 +26,35 @@ data class Reading(
 
 data class Goal(
     var id: Long = 0,
-    var meterId: Long = 0,      // для какого счётчика (0 – общая цель на все)
-    var targetAmount: Float = 0f, // целевая сумма экономии (в рублях)
-    var currentAmount: Float = 0f, // текущая накопленная экономия
-    var month: String = "",       // месяц в формате "yyyy-MM"
+    var meterId: Long = 0,
+    var targetAmount: Float = 0f,
+    var currentAmount: Float = 0f,
+    var month: String = "",
     var achieved: Boolean = false
 )
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 3) {
+data class ObjectData(
+    var id: Long = 0,
+    var name: String = "",
+    var reminderDay: Int = 1,
+    var isDefault: Boolean = false
+)
+
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 4) {
 
     override fun onCreate(db: SQLiteDatabase) {
+        // Таблица объектов
+        db.execSQL("""
+            CREATE TABLE objects (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                reminder_day INTEGER DEFAULT 1,
+                is_default INTEGER DEFAULT 0
+            )
+        """)
+        // Добавляем объект по умолчанию
+        db.execSQL("INSERT INTO objects (name, is_default) VALUES ('Моя квартира', 1)")
+
         db.execSQL("""
             CREATE TABLE meters (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,7 +62,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 type TEXT NOT NULL,
                 initial_reading REAL DEFAULT 0,
                 tariff REAL DEFAULT 0,
-                tag TEXT DEFAULT ''
+                tag TEXT DEFAULT '',
+                object_id INTEGER NOT NULL,
+                FOREIGN KEY(object_id) REFERENCES objects(id) ON DELETE CASCADE
             )
         """)
 
@@ -65,79 +89,70 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 FOREIGN KEY(meter_id) REFERENCES meters(id) ON DELETE CASCADE
             )
         """)
-
-        insertDefaultCategories(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
-            // версия 2 добавила tariff
-            db.execSQL("ALTER TABLE meters ADD COLUMN tariff REAL DEFAULT 0")
-        }
-        if (oldVersion < 3) {
-            // версия 3 добавила tag и таблицу goals
-            db.execSQL("ALTER TABLE meters ADD COLUMN tag TEXT DEFAULT ''")
+        if (oldVersion < 4) {
+            // Создаём таблицу объектов и добавляем столбец object_id в meters
             db.execSQL("""
-                CREATE TABLE goals (
+                CREATE TABLE objects (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    meter_id INTEGER,
-                    target_amount REAL NOT NULL,
-                    current_amount REAL DEFAULT 0,
-                    month TEXT NOT NULL,
-                    achieved INTEGER DEFAULT 0,
-                    FOREIGN KEY(meter_id) REFERENCES meters(id) ON DELETE CASCADE
+                    name TEXT NOT NULL,
+                    reminder_day INTEGER DEFAULT 1,
+                    is_default INTEGER DEFAULT 0
                 )
             """)
+            db.execSQL("INSERT INTO objects (name, is_default) VALUES ('Моя квартира', 1)")
+            db.execSQL("ALTER TABLE meters ADD COLUMN object_id INTEGER DEFAULT 1")
+            // Обновляем существующие счётчики (у них object_id станет 1)
         }
     }
 
-    private fun insertDefaultCategories(db: SQLiteDatabase) {
-        val expenseCategories = listOf("Еда", "Транспорт", "Развлечения", "Здоровье", "Одежда", "Связь", "Коммунальные услуги", "Образование", "Подарки", "Прочее")
-        val incomeCategories = listOf("Зарплата", "Подработка", "Подарки", "Инвестиции", "Прочее")
-
-        for (name in expenseCategories) {
-            val values = ContentValues().apply {
-                put("name", name)
-                put("type", "expense")
-                put("icon", getEmojiForCategory(name))
-                put("is_system", 1)
-            }
-            db.insert("categories", null, values)
+    // --- Методы для объектов ---
+    fun getAllObjects(): List<ObjectData> {
+        val list = mutableListOf<ObjectData>()
+        val db = readableDatabase
+        val cursor = db.query("objects", null, null, null, null, null, "name ASC")
+        while (cursor.moveToNext()) {
+            list.add(
+                ObjectData(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    reminderDay = cursor.getInt(cursor.getColumnIndexOrThrow("reminder_day")),
+                    isDefault = cursor.getInt(cursor.getColumnIndexOrThrow("is_default")) == 1
+                )
+            )
         }
-        for (name in incomeCategories) {
-            val values = ContentValues().apply {
-                put("name", name)
-                put("type", "income")
-                put("icon", getEmojiForCategory(name))
-                put("is_system", 1)
-            }
-            db.insert("categories", null, values)
-        }
+        cursor.close()
+        return list
     }
 
-    private fun getEmojiForCategory(name: String): String {
-        return when (name) {
-            "Еда" -> "🍔"
-            "Транспорт" -> "🚗"
-            "Развлечения" -> "🎬"
-            "Здоровье" -> "💊"
-            "Одежда" -> "👕"
-            "Связь" -> "📱"
-            "Коммунальные услуги" -> "💡"
-            "Образование" -> "📚"
-            "Подарки" -> "🎁"
-            "Прочее" -> "📌"
-            "Зарплата" -> "💰"
-            "Подработка" -> "💼"
-            "Инвестиции" -> "📈"
-            else -> "📌"
+    fun insertObject(obj: ObjectData): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("name", obj.name)
+            put("reminder_day", obj.reminderDay)
+            put("is_default", if (obj.isDefault) 1 else 0)
         }
+        return db.insert("objects", null, values)
     }
 
-    // Методы для категорий (оставлены без изменений, но в этом классе они не нужны для ЖКХ – можно удалить)
-    // ... (здесь идут методы getAllCategories, insertCategory и т.д., но для ЖКХ они не нужны, поэтому я их опускаю для краткости, но в реальном файле они могут быть. Если они есть, их можно оставить.)
+    fun updateObject(obj: ObjectData) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("name", obj.name)
+            put("reminder_day", obj.reminderDay)
+            put("is_default", if (obj.isDefault) 1 else 0)
+        }
+        db.update("objects", values, "id = ?", arrayOf(obj.id.toString()))
+    }
 
-    // Методы для метров
+    fun deleteObject(id: Long) {
+        val db = writableDatabase
+        db.delete("objects", "id = ?", arrayOf(id.toString()))
+    }
+
+    // --- Методы для счётчиков (адаптированы под объекты) ---
     fun insertMeter(meter: Meter): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -146,6 +161,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
             put("initial_reading", meter.initialReading)
             put("tariff", meter.tariff)
             put("tag", meter.tag)
+            put("object_id", meter.objectId)
         }
         return db.insert("meters", null, values)
     }
@@ -158,23 +174,29 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
             put("initial_reading", meter.initialReading)
             put("tariff", meter.tariff)
             put("tag", meter.tag)
+            put("object_id", meter.objectId)
         }
         db.update("meters", values, "id = ?", arrayOf(meter.id.toString()))
     }
 
-    fun getAllMeters(): List<Meter> {
+    fun getAllMeters(objectId: Long? = null): List<Meter> {
         val meters = mutableListOf<Meter>()
         val db = readableDatabase
-        val cursor = db.query("meters", null, null, null, null, null, "name ASC")
+        val selection = if (objectId != null) "object_id = ?" else null
+        val args = if (objectId != null) arrayOf(objectId.toString()) else null
+        val cursor = db.query("meters", null, selection, args, null, null, "name ASC")
         while (cursor.moveToNext()) {
-            meters.add(Meter(
-                id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
-                name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
-                type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
-                initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading")),
-                tariff = cursor.getFloat(cursor.getColumnIndexOrThrow("tariff")),
-                tag = cursor.getString(cursor.getColumnIndexOrThrow("tag")) ?: ""
-            ))
+            meters.add(
+                Meter(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
+                    initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading")),
+                    tariff = cursor.getFloat(cursor.getColumnIndexOrThrow("tariff")),
+                    tag = cursor.getString(cursor.getColumnIndexOrThrow("tag")) ?: "",
+                    objectId = cursor.getLong(cursor.getColumnIndexOrThrow("object_id"))
+                )
+            )
         }
         cursor.close()
         return meters
@@ -190,7 +212,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 type = cursor.getString(cursor.getColumnIndexOrThrow("type")),
                 initialReading = cursor.getFloat(cursor.getColumnIndexOrThrow("initial_reading")),
                 tariff = cursor.getFloat(cursor.getColumnIndexOrThrow("tariff")),
-                tag = cursor.getString(cursor.getColumnIndexOrThrow("tag")) ?: ""
+                tag = cursor.getString(cursor.getColumnIndexOrThrow("tag")) ?: "",
+                objectId = cursor.getLong(cursor.getColumnIndexOrThrow("object_id"))
             )
         } else {
             null
@@ -202,7 +225,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("meters", "id = ?", arrayOf(id.toString()))
     }
 
-    // Методы для показаний (без изменений, но оставим)
+    // --- Показания (без изменений, но теперь фильтруются по метру) ---
     fun insertReading(reading: Reading): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -226,14 +249,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
     fun getReadingsForMeter(meterId: Long): List<Reading> {
         val readings = mutableListOf<Reading>()
         val db = readableDatabase
-        val cursor = db.query("readings", null, "meter_id = ?", arrayOf(meterId.toString()), null, null, "date ASC")
+        val cursor = db.query(
+            "readings", null, "meter_id = ?", arrayOf(meterId.toString()), null, null, "date ASC"
+        )
         while (cursor.moveToNext()) {
-            readings.add(Reading(
-                id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
-                meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
-                value = cursor.getFloat(cursor.getColumnIndexOrThrow("value")),
-                date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-            ))
+            readings.add(
+                Reading(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
+                    value = cursor.getFloat(cursor.getColumnIndexOrThrow("value")),
+                    date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                )
+            )
         }
         cursor.close()
         return readings
@@ -244,12 +271,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         val db = readableDatabase
         val cursor = db.query("readings", null, null, null, null, null, "meter_id, date ASC")
         while (cursor.moveToNext()) {
-            readings.add(Reading(
-                id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
-                meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
-                value = cursor.getFloat(cursor.getColumnIndexOrThrow("value")),
-                date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-            ))
+            readings.add(
+                Reading(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
+                    value = cursor.getFloat(cursor.getColumnIndexOrThrow("value")),
+                    date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                )
+            )
         }
         cursor.close()
         return readings
@@ -260,7 +289,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("readings", "id = ?", arrayOf(id.toString()))
     }
 
-    // Методы для целей
+    // --- Цели (оставляем как есть, но привязываем к объекту через счётчик) ---
     fun insertGoal(goal: Goal): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -292,14 +321,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         val args = if (meterId == null) arrayOf(month) else arrayOf(month, meterId.toString())
         val cursor = db.query("goals", null, selection, args, null, null, null)
         while (cursor.moveToNext()) {
-            goals.add(Goal(
-                id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
-                meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
-                targetAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("target_amount")),
-                currentAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("current_amount")),
-                month = cursor.getString(cursor.getColumnIndexOrThrow("month")),
-                achieved = cursor.getInt(cursor.getColumnIndexOrThrow("achieved")) == 1
-            ))
+            goals.add(
+                Goal(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    meterId = cursor.getLong(cursor.getColumnIndexOrThrow("meter_id")),
+                    targetAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("target_amount")),
+                    currentAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("current_amount")),
+                    month = cursor.getString(cursor.getColumnIndexOrThrow("month")),
+                    achieved = cursor.getInt(cursor.getColumnIndexOrThrow("achieved")) == 1
+                )
+            )
         }
         cursor.close()
         return goals
