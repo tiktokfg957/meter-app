@@ -3,17 +3,12 @@ package com.example.meterreader
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.yandex.mobile.ads.AdRequest
-import com.yandex.mobile.ads.AdSize
-import com.yandex.mobile.ads.banner.BannerAdView
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -94,36 +89,12 @@ class MainActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
-        // ========== Рекламный баннер ==========
-        val banner = BannerAdView(this).apply {
-            setAdUnitId("R-M-18995591-1")          // ваш ID блока
-            setAdSize(AdSize.fixedSize(320, 50))
-            setAdListener(object : BannerAdView.AdListener {
-                override fun onAdLoaded() {
-                    findViewById<FrameLayout>(R.id.bannerContainer).visibility = View.VISIBLE
-                }
-                override fun onAdFailedToLoad(error: AdRequestError) {
-                    findViewById<FrameLayout>(R.id.bannerContainer).visibility = View.GONE
-                }
-                override fun onAdClicked() {}
-            })
-            loadAd(AdRequest.Builder().build())
-        }
-        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainer)
-        bannerContainer.addView(banner)
-
         loadMeters()
     }
 
     override fun onResume() {
         super.onResume()
         loadMeters()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainer)
-        bannerContainer.removeAllViews()
     }
 
     private fun loadMeters() {
