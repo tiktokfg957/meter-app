@@ -1,7 +1,9 @@
 package com.example.meterreader
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -49,13 +51,21 @@ class StatisticsActivity : BaseActivity() {
             }
         }
 
-        // Bar chart
+        // Подготовка данных для барчарта
         val months = monthlyExpenses.keys.sorted()
         val entries = months.mapIndexed { index, month ->
             BarEntry(index.toFloat(), monthlyExpenses[month] ?: 0f)
         }
+
+        // Вычисляем среднее и выделяем аномальные столбцы (выше среднего на 30%)
+        val values = entries.map { it.y }
+        val avg = if (values.isNotEmpty()) values.average().toFloat() else 0f
+        val colors = values.map { value ->
+            if (value > avg * 1.3f) Color.rgb(255, 200, 0) else ColorTemplate.MATERIAL_COLORS[0]
+        }
+
         val dataSet = BarDataSet(entries, "Расходы по месяцам")
-        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        dataSet.setColors(colors)
         val barData = BarData(dataSet)
         barChart.data = barData
         barChart.invalidate()
@@ -71,7 +81,7 @@ class StatisticsActivity : BaseActivity() {
             tvPeak.text = "Нет данных для определения пика"
         }
 
-        // Pie chart
+        // Круговая диаграмма
         val pieEntries = categoryExpenses.map { (category, amount) ->
             PieEntry(amount, category)
         }
