@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
@@ -52,13 +51,9 @@ class AddReadingActivity : BaseActivity() {
         recyclerView = findViewById(R.id.recyclerViewReadings)
 
         tvMeterInfo.text = "${meter.name} (${meter.type})"
-
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        btnSave.setOnClickListener {
-            saveReading()
-        }
-
+        btnSave.setOnClickListener { saveReading() }
         loadReadings()
     }
 
@@ -68,17 +63,12 @@ class AddReadingActivity : BaseActivity() {
             Toast.makeText(this, "Введите показания", Toast.LENGTH_SHORT).show()
             return
         }
-
         val value = valueStr.toFloatOrNull() ?: 0f
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = dateFormat.format(Date())
 
         if (editingReading == null) {
-            val reading = Reading(
-                meterId = meterId,
-                value = value,
-                date = currentDate
-            )
+            val reading = Reading(meterId = meterId, value = value, date = currentDate)
             dbHelper.insertReading(reading)
             Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
             showSuccessAnimation()
@@ -91,7 +81,6 @@ class AddReadingActivity : BaseActivity() {
             btnSave.text = "Сохранить показания"
             showSuccessAnimation()
         }
-
         etValue.text.clear()
         loadReadings()
     }
