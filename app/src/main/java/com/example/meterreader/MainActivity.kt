@@ -56,18 +56,15 @@ class MainActivity : BaseActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Загрузка объектов
         objectsList = dbHelper.getAllObjects()
-        objectAdapter = objectAdapter?.let { it } ?: ArrayAdapter(this, android.R.layout.simple_spinner_item, objectsList)
+        objectAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, objectsList)
         objectAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerObjects.adapter = objectAdapter
 
-        // Выбор объекта по умолчанию
         val defaultObject = objectsList.find { it.isDefault } ?: objectsList.firstOrNull()
         if (defaultObject != null) {
             currentObjectId = defaultObject.id
-            val position = objectsList.indexOf(defaultObject)
-            spinnerObjects.setSelection(position)
+            spinnerObjects.setSelection(objectsList.indexOf(defaultObject))
         }
 
         spinnerObjects.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -120,9 +117,7 @@ class MainActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
-        // Онбординг для новой версии
         checkOnboarding()
-
         loadMeters()
     }
 
@@ -148,7 +143,6 @@ class MainActivity : BaseActivity() {
             }
         )
         recyclerView.adapter = adapter
-
         updateTotalForCurrentMonth()
     }
 
@@ -169,12 +163,10 @@ class MainActivity : BaseActivity() {
                 totalMonth += diff * meter.tariff
             }
         }
-
         tvTotalMonth.text = "%.2f ₽".format(totalMonth)
     }
 
     private fun loadTip() {
-        // Анализируем расходы за последние 2 месяца
         val meters = dbHelper.getAllMeters(currentObjectId)
         val readings = dbHelper.getAllReadings()
         val calendar = Calendar.getInstance()
@@ -217,8 +209,7 @@ class MainActivity : BaseActivity() {
         val lastVersion = prefs.getInt("last_version_code", 0)
         val currentVersion = packageManager.getPackageInfo(packageName, 0).versionCode
         if (currentVersion > lastVersion && lastVersion < 14) {
-            // Показываем диалог с новыми функциями (мультиобъектность, виджеты)
-            android.app.AlertDialog.Builder(this)
+            AlertDialog.Builder(this)
                 .setTitle("Что нового в 1.0.6?")
                 .setMessage("✨ Мультиобъектный учёт – теперь вы можете вести показания для квартиры, дачи и других объектов.\n📊 Расширенные виджеты – следите за расходами прямо с рабочего стола.\n💡 Персонализированные советы по экономии.\n🎨 Улучшенная анимация и подсказки.")
                 .setPositiveButton("Понятно", null)
@@ -227,5 +218,83 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // ... остальные методы (exportToCSV, exportToExcel, isProActive) без изменений
+    private fun exportToCSV() {
+        try {
+            val meters = dbHelper.getAllMeters(currentObjectId)
+            val readings = dbHelper.getAllReadings()
+            val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+            val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.csv")
+
+            FileWriter(file).use { writer ->
+                CSVWriter(writer).use { csvWriter ->
+                    csvWriter.writeNext(arrayOf(
+                        "ID счётчика", "Название", "Тип", "Дата", "Показания", "Разница", "Стоимость"
+                    ))
+                    for (meter in meters) {
+                        val meterReadings = readings.filter { it.meterId == meter.id }
+                        for (i in meterReadings.indices) {
+                            val reading = meterReadings[i]
+                            val diff = if (i > 0) reading.value - meterReadings[i-1].value else reading.value - meter.initialReading
+                            val cost = diff * meter.tariff
+                            csvWriter.writeNext(arrayOf(
+                                meter.id.toString(), meter.name, meter.type, reading.date,
+                                reading.value.toString(), diff.toString(), "%.2f".format(cost)
+                            ))
+                        }
+                    }
+                }
+            }
+            Toast.makeText(this, "CSV сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exportToExcel() {
+        try {
+            val meters = dbHelper.getAllMeters(currentObjectId)
+            val readings = dbHelper.getAllReadings()
+            val workbook: Workbook = XSSFWorkbook()
+            val sheet = workbook.createSheet("Показания")
+            val headerRow = sheet.createRow(0)
+            headerRow.createCell(0).setCellValue("ID счётчика")
+            headerRow.createCell(1).setCellValue("Название")
+            headerRow.createCell(2).setCellValue("Тип")
+            headerRow.createCell(3).setCellValue("Дата")
+            headerRow.createCell(4).setCellValue("Показания")
+            headerRow.createCell(5).setCellValue("Разница")
+            headerRow.createCell(6).setCellValue("Стоимость")
+            var rowNum = 1
+            for (meter in meters) {
+                val meterReadings = readings.filter { it.meterId == meter.id }
+                for (i in meterReadings.indices) {
+                    val reading = meterReadings[i]
+                    val diff = if (i > 0) reading.value - meterReadings[i-1].value else reading.value - meter.initialReading
+                    val cost = diff * meter.tariff
+                    val row = sheet.createRow(rowNum++)
+                    row.createCell(0).setCellValue(meter.id.toDouble())
+                    row.createCell(1).setCellValue(meter.name)
+                    row.createCell(2).setCellValue(meter.type)
+                    row.createCell(3).setCellValue(reading.date)
+                    row.createCell(4).setCellValue(reading.value.toDouble())
+                    row.createCell(5).setCellValue(diff.toDouble())
+                    row.createCell(6).setCellValue(cost.toDouble())
+                }
+            }
+            val downloadsDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+            val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.xlsx")
+            file.outputStream().use { outputStream -> workbook.write(outputStream) }
+            workbook.close()
+            Toast.makeText(this, "Excel сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun isProActive(): Boolean {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isPro = prefs.getBoolean("isPro", false)
+        val expiry = prefs.getLong("proExpiryDate", 0)
+        return isPro || expiry > System.currentTimeMillis()
+    }
 }
