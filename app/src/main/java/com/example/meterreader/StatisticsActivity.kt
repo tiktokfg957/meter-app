@@ -3,7 +3,6 @@ package com.example.meterreader
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -23,11 +22,9 @@ class StatisticsActivity : BaseActivity() {
         setContentView(R.layout.activity_statistics)
 
         dbHelper = DatabaseHelper(this)
-
         tvPeak = findViewById(R.id.tvPeak)
         barChart = findViewById(R.id.barChart)
         pieChart = findViewById(R.id.pieChart)
-
         loadStatistics()
     }
 
@@ -51,13 +48,11 @@ class StatisticsActivity : BaseActivity() {
             }
         }
 
-        // Подготовка данных для барчарта
         val months = monthlyExpenses.keys.sorted()
         val entries = months.mapIndexed { index, month ->
             BarEntry(index.toFloat(), monthlyExpenses[month] ?: 0f)
         }
 
-        // Вычисляем среднее и выделяем аномальные столбцы (выше среднего на 30%)
         val values = entries.map { it.y }
         val avg = if (values.isNotEmpty()) values.average().toFloat() else 0f
         val colors = values.map { value ->
@@ -70,7 +65,6 @@ class StatisticsActivity : BaseActivity() {
         barChart.data = barData
         barChart.invalidate()
 
-        // Пик потребления
         if (entries.isNotEmpty()) {
             val maxEntry = entries.maxByOrNull { it.y }
             val maxIndex = maxEntry?.x?.toInt() ?: 0
@@ -81,10 +75,7 @@ class StatisticsActivity : BaseActivity() {
             tvPeak.text = "Нет данных для определения пика"
         }
 
-        // Круговая диаграмма
-        val pieEntries = categoryExpenses.map { (category, amount) ->
-            PieEntry(amount, category)
-        }
+        val pieEntries = categoryExpenses.map { (category, amount) -> PieEntry(amount, category) }
         val pieDataSet = PieDataSet(pieEntries, "Доля категорий")
         pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
         val pieData = PieData(pieDataSet)
