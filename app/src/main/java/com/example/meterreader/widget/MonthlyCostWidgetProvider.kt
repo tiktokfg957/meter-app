@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MonthlyCostWidgetProvider : AppWidgetProvider() {
-
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -19,9 +18,9 @@ class MonthlyCostWidgetProvider : AppWidgetProvider() {
 
     companion object {
         fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-            val dbHelper = DatabaseHelper(context)
             val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            val currentObjectId = prefs.getLong("current_object_id", 1) // по умолчанию объект 1
+            val currentObjectId = prefs.getLong("current_object_id", 1)
+            val dbHelper = DatabaseHelper(context)
             val meters = dbHelper.getAllMeters(currentObjectId)
             val readings = dbHelper.getAllReadings()
             val currentMonth = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
