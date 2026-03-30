@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:layout_width="0dp"
@@ -38,9 +38,53 @@
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/pro_badge_background_gradient"
-            android:elevation="6dp"
-            android:translationZ="2dp" />
+            android:elevation="6dp" />
     </LinearLayout>
+
+    <!-- Спиннер выбора объекта -->
+    <Spinner
+        android:id="@+id/spinnerObjects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/spinner_background"
+        android:padding="8dp" />
+
+    <!-- Карточка советов (появляется, если есть рекомендация) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardTip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        style="?attr/cardViewStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvTipTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💡 Совет по экономии"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorAccent" />
+
+            <TextView
+                android:id="@+id/tvTipText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorPrimary" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <!-- Карточка с итоговой суммой за месяц -->
     <androidx.cardview.widget.CardView
@@ -81,7 +125,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Панель кнопок -->
+    <!-- Панель кнопок (остаётся без изменений) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,7 +187,7 @@
             android:textAllCaps="false" />
     </LinearLayout>
 
-    <!-- Карточка VK-паблика -->
+    <!-- Карточка VK-паблика (остаётся) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardVK"
         android:layout_width="match_parent"
