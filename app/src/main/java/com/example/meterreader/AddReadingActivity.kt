@@ -1,11 +1,17 @@
 package com.example.meterreader
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
@@ -75,6 +81,7 @@ class AddReadingActivity : BaseActivity() {
             )
             dbHelper.insertReading(reading)
             Toast.makeText(this, "Показания сохранены", Toast.LENGTH_SHORT).show()
+            showSuccessAnimation()
         } else {
             editingReading?.value = value
             editingReading?.date = currentDate
@@ -82,10 +89,23 @@ class AddReadingActivity : BaseActivity() {
             Toast.makeText(this, "Показания обновлены", Toast.LENGTH_SHORT).show()
             editingReading = null
             btnSave.text = "Сохранить показания"
+            showSuccessAnimation()
         }
 
         etValue.text.clear()
         loadReadings()
+    }
+
+    private fun showSuccessAnimation() {
+        val checkmarkView = findViewById<ImageView>(R.id.checkmark_animation)
+        if (checkmarkView != null) {
+            val anim = AnimationUtils.loadAnimation(this, R.anim.checkmark)
+            checkmarkView.visibility = View.VISIBLE
+            checkmarkView.startAnimation(anim)
+            Handler(Looper.getMainLooper()).postDelayed({
+                checkmarkView.visibility = View.GONE
+            }, 1000)
+        }
     }
 
     private fun loadReadings() {
