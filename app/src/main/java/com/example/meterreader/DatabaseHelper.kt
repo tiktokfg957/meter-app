@@ -2,11 +2,9 @@ package com.example.meterreader
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-// Data classes
 data class Meter(
     var id: Long = 0,
     var name: String = "",
@@ -14,7 +12,7 @@ data class Meter(
     var initialReading: Float = 0f,
     var tariff: Float = 0f,
     var tag: String = "",
-    var objectId: Long = 0   // <-- новый ключ
+    var objectId: Long = 0
 )
 
 data class Reading(
@@ -43,7 +41,6 @@ data class ObjectData(
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", null, 4) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Таблица объектов
         db.execSQL("""
             CREATE TABLE objects (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +49,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
                 is_default INTEGER DEFAULT 0
             )
         """)
-        // Добавляем объект по умолчанию
         db.execSQL("INSERT INTO objects (name, is_default) VALUES ('Моя квартира', 1)")
 
         db.execSQL("""
@@ -93,7 +89,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 4) {
-            // Создаём таблицу объектов и добавляем столбец object_id в meters
             db.execSQL("""
                 CREATE TABLE objects (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,11 +99,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
             """)
             db.execSQL("INSERT INTO objects (name, is_default) VALUES ('Моя квартира', 1)")
             db.execSQL("ALTER TABLE meters ADD COLUMN object_id INTEGER DEFAULT 1")
-            // Обновляем существующие счётчики (у них object_id станет 1)
         }
     }
 
-    // --- Методы для объектов ---
+    // Objects
     fun getAllObjects(): List<ObjectData> {
         val list = mutableListOf<ObjectData>()
         val db = readableDatabase
@@ -152,7 +146,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("objects", "id = ?", arrayOf(id.toString()))
     }
 
-    // --- Методы для счётчиков (адаптированы под объекты) ---
+    // Meters
     fun insertMeter(meter: Meter): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -225,7 +219,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("meters", "id = ?", arrayOf(id.toString()))
     }
 
-    // --- Показания (без изменений, но теперь фильтруются по метру) ---
+    // Readings
     fun insertReading(reading: Reading): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -289,7 +283,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "meter.db", n
         db.delete("readings", "id = ?", arrayOf(id.toString()))
     }
 
-    // --- Цели (оставляем как есть, но привязываем к объекту через счётчик) ---
+    // Goals
     fun insertGoal(goal: Goal): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
