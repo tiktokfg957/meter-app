@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="🎉 Что нового?"
+        android:text="🎉 Что нового в 1.0.6?"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -19,18 +19,28 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="✨ PRO версия с расширенной статистикой и экспортом в Excel\n🔓 Пробный период 4 дня за подписку на VK\n📱 Страница VK для новостей\n🎨 Новый дизайн приложения\n⚡ Улучшенная производительность"
+        android:text="✨ Мультиобъектный учёт – теперь вы можете вести показания для квартиры, дачи и других объектов.\n📊 Расширенные виджеты – следите за расходами прямо с рабочего стола.\n💡 Персонализированные советы по экономии.\n🎨 Улучшенная анимация и подсказки."
         android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:lineSpacingExtra="8dp"
         android:layout_marginBottom="24dp" />
 
     <Button
-        android:id="@+id/btnChangelogClose"
+        android:id="@+id/btnRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⭐ Оставить отзыв"
+        android:backgroundTint="?attr/colorAccent"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Понятно, спасибо!"
-        android:backgroundTint="?attr/colorAccent"
+        android:backgroundTint="#666666"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
