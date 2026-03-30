@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:background="?android:attr/windowBackground">
 
-    <!-- Верхняя панель с заголовком и PRO бейджем -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +40,6 @@
             android:elevation="6dp" />
     </LinearLayout>
 
-    <!-- Спиннер выбора объекта -->
     <Spinner
         android:id="@+id/spinnerObjects"
         android:layout_width="match_parent"
@@ -50,7 +48,6 @@
         android:background="@drawable/spinner_background"
         android:padding="8dp" />
 
-    <!-- Карточка советов (появляется, если есть рекомендация) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardTip"
         android:layout_width="match_parent"
@@ -86,7 +83,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Карточка с итоговой суммой за месяц -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -125,7 +121,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Панель кнопок (остаётся без изменений) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -187,7 +182,6 @@
             android:textAllCaps="false" />
     </LinearLayout>
 
-    <!-- Карточка VK-паблика (остаётся) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardVK"
         android:layout_width="match_parent"
