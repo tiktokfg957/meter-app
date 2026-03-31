@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://maven.my.com/" }          // официальный репозиторий myTarget
         maven { url "https://github.com/myTargetSDK/myTargetSDK/raw/maven" }
         maven { url "https://jitpack.io" }
     }
