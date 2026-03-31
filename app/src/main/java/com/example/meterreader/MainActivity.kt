@@ -3,11 +3,15 @@ package com.example.meterreader
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.my.target.ads.NativeAd
+import com.my.target.ads.NativePromoBanner
+import com.my.target.common.MyTargetPrivacy
+import com.my.target.views.IconAdView
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -117,6 +121,58 @@ class MainActivity : BaseActivity() {
             val dialog = ProDialogFragment()
             dialog.show(supportFragmentManager, "pro_dialog")
         }
+
+        // ========================
+        // РЕКЛАМА (myTarget)
+        // ========================
+        MyTargetPrivacy.getInstance().setUserConsent(true)
+
+        val nativeAd = NativeAd(1987396, this)
+        nativeAd.setListener(object : NativeAd.NativeAdListener {
+            override fun onLoad(banner: NativePromoBanner?, ad: NativeAd?) {
+                if (banner == null || ad == null) return
+
+                val adView = layoutInflater.inflate(R.layout.native_ad_layout, null)
+
+                val advertisingLabel = adView.findViewById<TextView>(R.id.nativeads_advertising)
+                val title = adView.findViewById<TextView>(R.id.nativeads_title)
+                val description = adView.findViewById<TextView>(R.id.nativeads_description)
+                val ctaButton = adView.findViewById<Button>(R.id.nativeads_call_to_action)
+                val disclaimer = adView.findViewById<TextView>(R.id.nativeads_disclaimer)
+                val iconView = adView.findViewById<IconAdView>(R.id.nativeads_icon)
+
+                advertisingLabel.text = banner.advertisingLabel ?: "Реклама"
+                title.text = banner.title
+                description.text = banner.description
+                ctaButton.text = banner.ctaText ?: "Узнать"
+                disclaimer.text = banner.disclaimer
+
+                banner.icon?.let {
+                    iconView.setImageData(it)
+                }
+
+                val clickableViews = listOf<View>(adView, ctaButton)
+                ad.registerView(adView, clickableViews)
+
+                val container = findViewById<FrameLayout>(R.id.bannerContainer)
+                container.removeAllViews()
+                container.addView(adView)
+                container.visibility = View.VISIBLE
+            }
+
+            override fun onNoAd(reason: String?, ad: NativeAd?) {
+                findViewById<FrameLayout>(R.id.bannerContainer).visibility = View.GONE
+            }
+
+            override fun onClick(ad: NativeAd?) {}
+            override fun onShow(ad: NativeAd?) {}
+            override fun onVideoPlay(ad: NativeAd?) {}
+            override fun onVideoPause(ad: NativeAd?) {}
+            override fun onVideoComplete(ad: NativeAd?) {}
+        })
+        nativeAd.load()
+
+        // ========================
 
         checkOnboarding()
         loadMeters()
