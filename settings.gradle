@@ -10,10 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // Если maven.my.com снова заработает, можно раскомментировать
-        // maven { url "https://maven.my.com/" }
         maven { url "https://jitpack.io" }
+        // maven { url "https://maven.my.com/" }  // пока отключён
     }
 }
-rootProject.name = "MeterReader"
-include ':app'
