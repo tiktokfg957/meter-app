@@ -45,7 +45,7 @@ class SupportChatActivity : AppCompatActivity() {
                     val message = SupportMessage(text = text, isFromUser = true)
                     db.supportMessageDao().insert(message)
                     binding.etMessage.text.clear()
-                    Toast.makeText(this@SupportChatActivity, "Сообщение сохранено", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SupportChatActivity, "Сообщение сохранено. Мы ответим в ближайшее время.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
