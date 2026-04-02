@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:maxWidth="260dp"
-        android:textSize="14sp"
-        android:textColor="?android:attr/textColorPrimary" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvTime"
