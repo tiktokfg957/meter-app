@@ -220,7 +220,7 @@ class MainActivity : BaseActivity() {
         if (currentVersion > lastVersion && lastVersion < 14) {
             AlertDialog.Builder(this)
                 .setTitle("Что нового в 1.0.7?")
-                .setMessage("✨ Мультиобъектный учёт\n📊 Виджеты\n💡 Советы по экономии\n💬 Чат поддержки")
+                .setMessage("✨ Мультиобъектный учёт\n📊 Виджеты\n💡 Советы по экономии\n💬 Чат поддержки\n🎨 Улучшенный интерфейс")
                 .setPositiveButton("Понятно", null)
                 .show()
             prefs.edit().putInt("last_version_code", currentVersion).apply()
