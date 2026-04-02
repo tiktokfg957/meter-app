@@ -222,14 +222,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Контейнер для рекламного баннера -->
-    <FrameLayout
-        android:id="@+id/bannerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
