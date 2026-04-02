@@ -9,7 +9,7 @@ data class MeterData(
     val id: Long = 0,
     val objectId: Long,
     val name: String,
-    val type: String,   // "Вода", "Свет", "Газ"
+    val type: String,
     val tariff: Float,
     val initialReading: Float
 )
