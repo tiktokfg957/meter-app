@@ -133,33 +133,26 @@ class MainActivity : BaseActivity() {
         }
 
         // ========== БАННЕР ЯНДЕКС (ИСПРАВЛЕННЫЙ) ==========
-        val displayMetrics = resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-
-        val bannerView = BannerAdView(this).apply {
-            setAdUnitId("R-M-18995591-1")
-            // Используем адаптивный размер с указанием ширины экрана
-            setAdSize(BannerAdSize.stickySize(this@MainActivity, screenWidth))
-            setBannerAdEventListener(object : BannerAdEventListener {
-                override fun onAdLoaded() {
-                    findViewById<FrameLayout>(R.id.bannerContainer)?.apply {
-                        removeAllViews()
-                        addView(bannerView)
-                        visibility = View.VISIBLE
-                    }
+        val bannerView = BannerAdView(this)
+        bannerView.setAdUnitId("R-M-18995591-1")
+        bannerView.setAdSize(BannerAdSize.stickySize(this, resources.displayMetrics.widthPixels))
+        bannerView.setBannerAdEventListener(object : BannerAdEventListener {
+            override fun onAdLoaded() {
+                findViewById<FrameLayout>(R.id.bannerContainer)?.apply {
+                    removeAllViews()
+                    addView(bannerView)
+                    visibility = View.VISIBLE
                 }
-                override fun onAdFailedToLoad(error: AdRequestError) {
-                    findViewById<FrameLayout>(R.id.bannerContainer)?.visibility = View.GONE
-                }
-                override fun onAdClicked() {}
-                override fun onImpression(impressionData: ImpressionData?) {}
-                override fun onLeftApplication() {}
-                override fun onReturnedToApplication() {}
-                override fun onAdShown() {}
-                override fun onAdDismissed() {}
-            })
-            loadAd(AdRequest.Builder().build())
-        }
+            }
+            override fun onAdFailedToLoad(error: AdRequestError) {
+                findViewById<FrameLayout>(R.id.bannerContainer)?.visibility = View.GONE
+            }
+            override fun onAdClicked() {}
+            override fun onImpression(impressionData: ImpressionData?) {}
+            override fun onLeftApplication() {}
+            override fun onReturnedToApplication() {}
+        })
+        bannerView.loadAd(AdRequest.Builder().build())
         // =================================================
 
         checkOnboarding()
