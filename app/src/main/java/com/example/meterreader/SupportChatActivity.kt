@@ -21,7 +21,6 @@ class SupportChatActivity : AppCompatActivity() {
             setPadding(32, 32, 32, 32)
         }
 
-        // Заголовок
         val title = TextView(this).apply {
             text = "Служба поддержки"
             textSize = 24f
@@ -30,7 +29,7 @@ class SupportChatActivity : AppCompatActivity() {
         }
         layout.addView(title)
 
-        // Карточка VK
+        // VK
         val vkCard = createCard(
             text = "Написать в VK",
             description = "Ответим в течение дня",
@@ -42,10 +41,9 @@ class SupportChatActivity : AppCompatActivity() {
         }
         layout.addView(vkCard)
 
-        // Отступ между карточками
         layout.addView(createSpacer())
 
-        // Карточка Google Формы
+        // Google Форма
         val formCard = createCard(
             text = "Заполнить форму",
             description = "Отправьте сообщение анонимно",
