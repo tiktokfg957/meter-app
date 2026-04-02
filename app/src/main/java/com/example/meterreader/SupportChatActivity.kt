@@ -22,9 +22,11 @@ class SupportChatActivity : AppCompatActivity() {
         val webView = WebView(this)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()
-        // ЗАМЕНИТЕ НА ВАШУ ССЫЛКУ (Google Форма, Telegram, VK)
-        webView.loadUrl("https://t.me/ваш_чат_или_бот")  // или ссылка на форму
-        binding.root.addView(webView, 0) // добавляем WebView поверх всего
+
+        // Ваша ссылка на Google Форму
+        webView.loadUrl("https://forms.gle/trMWP75AmmjbrySv8")
+
+        binding.root.addView(webView, 0)
     }
 
     override fun onSupportNavigateUp(): Boolean {
