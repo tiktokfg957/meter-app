@@ -3,7 +3,7 @@ package com.example.meterreader
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.meterreader.data.model.SupportMessage
+import com.example.meterreader.SupportChatActivity.SupportMessage
 import com.example.meterreader.databinding.ItemSupportMessageBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,29 +34,23 @@ class SupportMessageAdapter : RecyclerView.Adapter<SupportMessageAdapter.ViewHol
             val sdf = SimpleDateFormat("HH:mm dd.MM.yy", Locale.getDefault())
             binding.tvTime.text = sdf.format(Date(message.timestamp))
 
-            // Определяем, от кого сообщение
+            val layoutParams = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
             if (message.isFromUser) {
-                // Сообщение пользователя – слева (серый)
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_user)
                 binding.tvMessage.setTextColor(android.graphics.Color.BLACK)
-                // Сбрасываем отступы (по умолчанию слева)
-                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
-                params?.apply {
+                layoutParams?.apply {
                     marginStart = 0
                     marginEnd = 80
                 }
-                binding.root.layoutParams = params
             } else {
-                // Сообщение поддержки – справа (синий)
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_support)
                 binding.tvMessage.setTextColor(android.graphics.Color.WHITE)
-                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
-                params?.apply {
+                layoutParams?.apply {
                     marginStart = 80
                     marginEnd = 0
                 }
-                binding.root.layoutParams = params
             }
+            binding.root.layoutParams = layoutParams
         }
     }
 }
