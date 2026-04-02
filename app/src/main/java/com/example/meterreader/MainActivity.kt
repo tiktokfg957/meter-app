@@ -133,9 +133,13 @@ class MainActivity : BaseActivity() {
         }
 
         // ========== БАННЕР ЯНДЕКС ==========
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+
         val bannerView = BannerAdView(this).apply {
             setAdUnitId("R-M-18995591-1")
-            setAdSize(BannerAdSize.stickySize(this@MainActivity))
+            // Устанавливаем адаптивный размер на всю ширину экрана
+            setAdSize(BannerAdSize.inlineSize(screenWidth, 50))
             setAdEventListener(object : BannerAdEventListener {
                 override fun onAdLoaded() {
                     findViewById<FrameLayout>(R.id.bannerContainer)?.apply {
@@ -148,8 +152,11 @@ class MainActivity : BaseActivity() {
                     findViewById<FrameLayout>(R.id.bannerContainer)?.visibility = View.GONE
                 }
                 override fun onAdClicked() {}
-                override fun onReturnedToApp() {}
                 override fun onImpression(impressionData: ImpressionData?) {}
+                override fun onAdShown() {}
+                override fun onAdDismissed() {}
+                override fun onLeftApplication() {}
+                override fun onReturnedToApp() {}
             })
             loadAd(AdRequest.Builder().build())
         }
