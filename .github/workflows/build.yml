@@ -32,8 +32,7 @@ jobs:
         export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
         export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
         export KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
-        chmod +x gradlew
-        ./gradlew assembleRelease
+        gradle assembleRelease
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
