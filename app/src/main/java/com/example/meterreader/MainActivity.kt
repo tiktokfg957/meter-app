@@ -58,6 +58,7 @@ class MainActivity : BaseActivity() {
         tvTipTitle = findViewById(R.id.tvTipTitle)
         tvTipText = findViewById(R.id.tvTipText)
 
+        // Кнопка поддержки
         btnSupport.setOnClickListener {
             startActivity(Intent(this, SupportChatActivity::class.java))
         }
