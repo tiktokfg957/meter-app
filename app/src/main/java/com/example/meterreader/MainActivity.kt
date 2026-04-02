@@ -9,6 +9,12 @@ import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.yandex.mobile.ads.common.AdRequest
+import com.yandex.mobile.ads.common.AdRequestError
+import com.yandex.mobile.ads.common.ImpressionData
+import com.yandex.mobile.ads.banner.BannerAdEventListener
+import com.yandex.mobile.ads.banner.BannerAdSize
+import com.yandex.mobile.ads.banner.BannerAdView
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -125,6 +131,29 @@ class MainActivity : BaseActivity() {
             val dialog = ProDialogFragment()
             dialog.show(supportFragmentManager, "pro_dialog")
         }
+
+        // ========== БАННЕР ЯНДЕКС ==========
+        val bannerView = BannerAdView(this).apply {
+            setAdUnitId("R-M-18995591-1")
+            setAdSize(BannerAdSize.stickySize(this@MainActivity))
+            setAdEventListener(object : BannerAdEventListener {
+                override fun onAdLoaded() {
+                    findViewById<FrameLayout>(R.id.bannerContainer)?.apply {
+                        removeAllViews()
+                        addView(bannerView)
+                        visibility = View.VISIBLE
+                    }
+                }
+                override fun onAdFailedToLoad(error: AdRequestError) {
+                    findViewById<FrameLayout>(R.id.bannerContainer)?.visibility = View.GONE
+                }
+                override fun onAdClicked() {}
+                override fun onReturnedToApp() {}
+                override fun onImpression(impressionData: ImpressionData?) {}
+            })
+            loadAd(AdRequest.Builder().build())
+        }
+        // ==================================
 
         checkOnboarding()
         loadMeters()
