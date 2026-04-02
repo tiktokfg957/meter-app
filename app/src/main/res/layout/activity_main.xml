@@ -50,7 +50,7 @@
         android:background="@drawable/spinner_background"
         android:padding="8dp" />
 
-    <!-- Карточка советов (появляется, если есть рекомендация) -->
+    <!-- Карточка советов -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardTip"
         android:layout_width="match_parent"
@@ -60,13 +60,11 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
         style="?attr/cardViewStyle">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
-
             <TextView
                 android:id="@+id/tvTipTitle"
                 android:layout_width="wrap_content"
@@ -75,7 +73,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorAccent" />
-
             <TextView
                 android:id="@+id/tvTipText"
                 android:layout_width="match_parent"
@@ -94,20 +91,17 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp"
         style="?attr/cardViewStyle">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="💰 Итого за месяц"
                 android:textSize="16sp"
                 android:textColor="?android:attr/textColorSecondary" />
-
             <TextView
                 android:id="@+id/tvTotalMonth"
                 android:layout_width="wrap_content"
@@ -131,7 +125,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:weightSum="5">
+        android:weightSum="6">
 
         <Button
             android:id="@+id/btnStats"
@@ -184,6 +178,17 @@
             android:layout_weight="1"
             android:text="Настройки"
             android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnSupport"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Поддержка"
+            android:layout_marginStart="4dp"
             android:textAllCaps="false" />
     </LinearLayout>
 
@@ -196,14 +201,12 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
         style="?attr/cardViewStyle">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp"
             android:gravity="center_vertical">
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -211,7 +214,6 @@
                 android:text="📱 Наша страница VK: новости и советы"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorPrimary" />
-
             <Button
                 android:id="@+id/btnVK"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
