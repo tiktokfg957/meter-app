@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".AddMeterActivity" />
         <activity android:name=".AddReadingActivity" />
         <activity android:name=".ChartActivity" />
@@ -27,7 +28,7 @@
         <activity android:name=".GoalsActivity" />
         <activity android:name=".AddGoalActivity" />
         
-        <!-- ЭТА СТРОКА ОБЯЗАТЕЛЬНО ДОЛЖНА БЫТЬ -->
+        <!-- Чат поддержки -->
         <activity android:name=".SupportChatActivity" />
 
         <!-- Виджеты -->
