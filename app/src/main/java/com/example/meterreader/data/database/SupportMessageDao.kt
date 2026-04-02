@@ -1,6 +1,7 @@
 package com.example.meterreader.data.database
 
 import androidx.room.*
+import com.example.meterreader.data.model.SupportMessage
 import kotlinx.coroutines.flow.Flow
 
 @Dao
