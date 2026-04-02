@@ -34,23 +34,29 @@ class SupportMessageAdapter : RecyclerView.Adapter<SupportMessageAdapter.ViewHol
             val sdf = SimpleDateFormat("HH:mm dd.MM.yy", Locale.getDefault())
             binding.tvTime.text = sdf.format(Date(message.timestamp))
 
-            val layoutParams = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+            // Определяем, от кого сообщение
             if (message.isFromUser) {
+                // Сообщение пользователя – слева (серый)
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_user)
                 binding.tvMessage.setTextColor(android.graphics.Color.BLACK)
-                layoutParams?.apply {
+                // Сбрасываем отступы (по умолчанию слева)
+                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+                params?.apply {
                     marginStart = 0
                     marginEnd = 80
                 }
+                binding.root.layoutParams = params
             } else {
+                // Сообщение поддержки – справа (синий)
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_support)
                 binding.tvMessage.setTextColor(android.graphics.Color.WHITE)
-                layoutParams?.apply {
+                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+                params?.apply {
                     marginStart = 80
                     marginEnd = 0
                 }
+                binding.root.layoutParams = params
             }
-            binding.root.layoutParams = layoutParams
         }
     }
 }
