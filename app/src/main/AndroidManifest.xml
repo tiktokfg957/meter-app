@@ -26,6 +26,7 @@
         <activity android:name=".StatisticsActivity" />
         <activity android:name=".GoalsActivity" />
         <activity android:name=".AddGoalActivity" />
+        <activity android:name=".SupportChatActivity" />
 
         <!-- Виджеты -->
         <receiver
