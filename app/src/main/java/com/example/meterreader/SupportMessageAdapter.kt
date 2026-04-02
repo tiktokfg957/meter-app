@@ -34,12 +34,10 @@ class SupportMessageAdapter : RecyclerView.Adapter<SupportMessageAdapter.ViewHol
             val sdf = SimpleDateFormat("HH:mm dd.MM.yy", Locale.getDefault())
             binding.tvTime.text = sdf.format(Date(message.timestamp))
 
-            // Настройка выравнивания и фона в зависимости от того, кто отправил
             val layoutParams = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
             if (message.isFromUser) {
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_user)
                 binding.tvMessage.setTextColor(android.graphics.Color.BLACK)
-                // прижать к левому краю
                 layoutParams?.apply {
                     marginStart = 0
                     marginEnd = 80
@@ -47,7 +45,6 @@ class SupportMessageAdapter : RecyclerView.Adapter<SupportMessageAdapter.ViewHol
             } else {
                 binding.tvMessage.setBackgroundResource(R.drawable.bubble_support)
                 binding.tvMessage.setTextColor(android.graphics.Color.WHITE)
-                // прижать к правому краю
                 layoutParams?.apply {
                     marginStart = 80
                     marginEnd = 0
