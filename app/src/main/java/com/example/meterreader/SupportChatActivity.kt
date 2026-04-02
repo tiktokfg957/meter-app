@@ -13,13 +13,11 @@ class SupportChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Создаём контейнер (LinearLayout) для кнопок
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
         }
 
-        // Заголовок / пояснение
         val infoText = TextView(this).apply {
             text = "Выберите удобный способ связи с поддержкой:"
             textSize = 18f
@@ -27,7 +25,6 @@ class SupportChatActivity : AppCompatActivity() {
         }
         layout.addView(infoText)
 
-        // Кнопка "Написать в ВК"
         val vkButton = Button(this).apply {
             text = "📱 Написать в VK"
             setOnClickListener {
@@ -37,13 +34,11 @@ class SupportChatActivity : AppCompatActivity() {
         }
         layout.addView(vkButton)
 
-        // Отступ между кнопками
         val spacer = TextView(this).apply {
             height = 32
         }
         layout.addView(spacer)
 
-        // Кнопка "Google Форма"
         val formButton = Button(this).apply {
             text = "📝 Заполнить Google Форму"
             setOnClickListener {
@@ -52,14 +47,6 @@ class SupportChatActivity : AppCompatActivity() {
             }
         }
         layout.addView(formButton)
-
-        // Дополнительный текст с почтой (опционально)
-        val emailText = TextView(this).apply {
-            text = "Или напишите нам на почту: support@example.com"
-            textSize = 14f
-            setPadding(0, 32, 0, 0)
-        }
-        layout.addView(emailText)
 
         setContentView(layout)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
