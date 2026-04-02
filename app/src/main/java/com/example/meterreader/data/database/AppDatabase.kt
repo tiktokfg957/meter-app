@@ -7,7 +7,13 @@ import androidx.room.RoomDatabase
 import com.example.meterreader.data.model.*
 
 @Database(
-    entities = [User::class, MeterData::class, ReadingData::class, GoalData::class, SupportMessage::class],
+    entities = [
+        User::class,
+        MeterData::class,
+        ReadingData::class,
+        GoalData::class,
+        SupportMessage::class
+    ],
     version = 2,
     exportSchema = false
 )
@@ -29,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "meter_reader_db"
                 ).fallbackToDestructiveMigration()
-                 .build()
+                    .build()
                 INSTANCE = instance
                 instance
             }
