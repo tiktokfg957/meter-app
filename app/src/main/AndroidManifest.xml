@@ -26,6 +26,8 @@
         <activity android:name=".StatisticsActivity" />
         <activity android:name=".GoalsActivity" />
         <activity android:name=".AddGoalActivity" />
+        
+        <!-- ЭТА СТРОКА ОБЯЗАТЕЛЬНО ДОЛЖНА БЫТЬ -->
         <activity android:name=".SupportChatActivity" />
 
         <!-- Виджеты -->
