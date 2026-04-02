@@ -8,6 +8,6 @@ data class ReadingData(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val meterId: Long,
-    val date: String,   // "yyyy-MM-dd"
+    val date: String,
     val value: Float
 )
