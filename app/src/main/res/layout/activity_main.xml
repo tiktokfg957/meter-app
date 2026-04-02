@@ -125,22 +125,22 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Панель кнопок -->
-    <LinearLayout
+    <!-- Панель кнопок в две строки (GridLayout 2x3) -->
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:weightSum="6">
+        app:columnCount="3"
+        app:rowCount="2"
+        app:useDefaultMargins="true">
 
         <Button
             android:id="@+id/btnStats"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="Статистика"
-            android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
         <Button
@@ -148,10 +148,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="Цели"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
         <Button
@@ -159,10 +157,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="CSV"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
         <Button
@@ -170,10 +166,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="Excel"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
         <Button
@@ -181,10 +175,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="Настройки"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:textAllCaps="false" />
 
         <Button
@@ -192,11 +184,11 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
             android:text="Поддержка"
-            android:layout_marginStart="4dp"
             android:textAllCaps="false" />
-    </LinearLayout>
+
+    </androidx.gridlayout.widget.GridLayout>
 
     <!-- Карточка VK-паблика -->
     <androidx.cardview.widget.CardView
