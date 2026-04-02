@@ -132,12 +132,15 @@ class MainActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "pro_dialog")
         }
 
-        // ========== БАННЕР ЯНДЕКС ==========
+        // ========== БАННЕР ЯНДЕКС (ИСПРАВЛЕННЫЙ) ==========
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+
         val bannerView = BannerAdView(this).apply {
             setAdUnitId("R-M-18995591-1")
-            // Используем адаптивный размер на всю ширину экрана
-            setAdSize(BannerAdSize.stickySize(this@MainActivity))
-            setAdEventListener(object : BannerAdEventListener {
+            // Используем адаптивный размер с указанием ширины экрана
+            setAdSize(BannerAdSize.stickySize(this@MainActivity, screenWidth))
+            setBannerAdEventListener(object : BannerAdEventListener {
                 override fun onAdLoaded() {
                     findViewById<FrameLayout>(R.id.bannerContainer)?.apply {
                         removeAllViews()
@@ -157,7 +160,7 @@ class MainActivity : BaseActivity() {
             })
             loadAd(AdRequest.Builder().build())
         }
-        // ==================================
+        // =================================================
 
         checkOnboarding()
         loadMeters()
@@ -327,7 +330,7 @@ class MainActivity : BaseActivity() {
             val file = File(downloadsDir, "meter_readings_${System.currentTimeMillis()}.xlsx")
             file.outputStream().use { outputStream -> workbook.write(outputStream) }
             workbook.close()
-            Toast.makeText(this, "Excel сохранен: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Excel сохранён: ${file.absolutePath}", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
         }
