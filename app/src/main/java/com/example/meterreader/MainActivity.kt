@@ -26,6 +26,7 @@ class MainActivity : BaseActivity() {
     private lateinit var btnExportCSV: Button
     private lateinit var btnExportExcel: Button
     private lateinit var btnSettings: Button
+    private lateinit var btnSupport: Button
     private lateinit var tvTotalMonth: TextView
     private lateinit var spinnerObjects: Spinner
     private lateinit var cardTip: View
@@ -50,14 +51,13 @@ class MainActivity : BaseActivity() {
         btnExportCSV = findViewById(R.id.btnExportCSV)
         btnExportExcel = findViewById(R.id.btnExportExcel)
         btnSettings = findViewById(R.id.btnSettings)
+        btnSupport = findViewById(R.id.btnSupport)
         tvTotalMonth = findViewById(R.id.tvTotalMonth)
         spinnerObjects = findViewById(R.id.spinnerObjects)
         cardTip = findViewById(R.id.cardTip)
         tvTipTitle = findViewById(R.id.tvTipTitle)
         tvTipText = findViewById(R.id.tvTipText)
 
-        // Кнопка поддержки (добавьте её в activity_main.xml, если нет)
-        val btnSupport = findViewById<Button>(R.id.btnSupport)
         btnSupport.setOnClickListener {
             startActivity(Intent(this, SupportChatActivity::class.java))
         }
