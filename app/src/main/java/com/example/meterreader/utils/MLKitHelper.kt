@@ -12,11 +12,7 @@ object MLKitHelper {
         val image = InputImage.fromBitmap(bitmap, 0)
         recognizer.process(image)
             .addOnSuccessListener { visionText ->
-                val resultText = visionText.text
-                // Извлекаем числовые значения (упрощённо: ищем последовательности цифр)
-                val numbers = Regex("\\d+").findAll(resultText).map { it.value }.toList()
-                val result = numbers.joinToString(" ")
-                onResult(result)
+                onResult(visionText.text)
             }
             .addOnFailureListener { e ->
                 onError(e)
