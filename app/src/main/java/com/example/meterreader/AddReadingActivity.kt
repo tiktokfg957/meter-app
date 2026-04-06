@@ -70,7 +70,6 @@ class AddReadingActivity : AppCompatActivity() {
             val bitmap = data?.extras?.get("data") as Bitmap
             MLKitHelper.recognizeText(bitmap,
                 onResult = { recognizedText ->
-                    // Извлекаем первое число из распознанного текста
                     val numbers = Regex("\\d+").findAll(recognizedText).map { it.value }.toList()
                     val firstNumber = numbers.firstOrNull()
                     if (firstNumber != null) {
