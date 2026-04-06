@@ -167,3 +167,23 @@
         android:backgroundTint="?attr/colorAccent" />
 
 </LinearLayout>
+<!-- Добавить в существующий layout -->
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="День напоминания о показаниях"
+    android:textSize="16sp"
+    android:layout_marginTop="16dp" />
+
+<Spinner
+    android:id="@+id/spinnerReminderDay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp" />
+
+<Button
+    android:id="@+id/btnSaveReminder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Сохранить день"
+    android:layout_marginTop="16dp" />
